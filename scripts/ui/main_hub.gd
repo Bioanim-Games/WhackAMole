@@ -220,10 +220,11 @@ func _rebuild_pvz_lanes_visualizer() -> void:
 		lane_panel.add_theme_stylebox_override("panel", sb)
 
 		var hbox := HBoxContainer.new()
-		hbox.alignment = BoxContainer.ALIGNMENT_BETWEEN
+		hbox.add_theme_constant_override("separation", 12)
 		lane_panel.add_child(hbox)
 
 		var status_lbl := Label.new()
+		status_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		status_lbl.text = (
 			"🌱 #%d — %s" % [row_idx + 1, LocalizationManager.t("HUB_LANE_ACTIVE")]
 			if is_active
