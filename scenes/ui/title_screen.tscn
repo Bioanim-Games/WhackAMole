@@ -1,0 +1,151 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/title_screen.gd" id="1_title_script"]
+[ext_resource type="Texture2D" path="res://assets/art/topo_hero.jpg" id="2_hero_tex"]
+
+[sub_resource type="Gradient" id="Gradient_vignette"]
+offsets = PackedFloat32Array(0, 0.25, 0.68, 1)
+colors = PackedColorArray(0.06, 0.04, 0.02, 0.82, 0.06, 0.04, 0.02, 0.08, 0.06, 0.04, 0.02, 0.2, 0.05, 0.03, 0.01, 0.9)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vignette"]
+gradient = SubResource("Gradient_vignette")
+fill_from = Vector2(0.5, 0)
+fill_to = Vector2(0.5, 1)
+
+[node name="TitleScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_title_script")
+
+[node name="BackgroundHolder" type="Control" parent="."]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HeroArt" type="TextureRect" parent="BackgroundHolder"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_hero_tex")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="VignetteOverlay" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_vignette")
+expand_mode = 1
+
+[node name="AmbientMotes" type="CPUParticles2D" parent="."]
+position = Vector2(540, 1750)
+amount = 28
+lifetime = 6.0
+preprocess = 2.0
+emission_shape = 3
+emission_rect_extents = Vector2(540, 200)
+direction = Vector2(0, -1)
+spread = 25.0
+gravity = Vector2(0, -18)
+initial_velocity_min = 35.0
+initial_velocity_max = 75.0
+scale_amount_min = 3.0
+scale_amount_max = 7.0
+color = Color(1, 0.91, 0.52, 0.45)
+
+[node name="SafeMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 48
+
+[node name="CenterWrap" type="HBoxContainer" parent="SafeMargin"]
+layout_mode = 2
+alignment = 1
+
+[node name="CenterColumn" type="VBoxContainer" parent="SafeMargin/CenterWrap"]
+custom_minimum_size = Vector2(760, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_constants/separation = 24
+
+[node name="TopBar" type="HBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn"]
+layout_mode = 2
+alignment = 2
+
+[node name="LangBox" type="HBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn/TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LangLabel" type="Label" parent="SafeMargin/CenterWrap/CenterColumn/TopBar/LangBox"]
+layout_mode = 2
+text = "🌐 Idioma:"
+
+[node name="LanguageOptionButton" type="OptionButton" parent="SafeMargin/CenterWrap/CenterColumn/TopBar/LangBox"]
+custom_minimum_size = Vector2(260, 44)
+layout_mode = 2
+
+[node name="TopTitleBadge" type="PanelContainer" parent="SafeMargin/CenterWrap/CenterColumn"]
+layout_mode = 2
+
+[node name="TitleVBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn/TopTitleBadge"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="MainLogoLabel" type="Label" parent="SafeMargin/CenterWrap/CenterColumn/TopTitleBadge/TitleVBox"]
+layout_mode = 2
+text = "TOPO SMASH"
+horizontal_alignment = 1
+
+[node name="SubLogoLabel" type="Label" parent="SafeMargin/CenterWrap/CenterColumn/TopTitleBadge/TitleVBox"]
+layout_mode = 2
+text = "CAOS CON CASCO"
+horizontal_alignment = 1
+
+[node name="TaglineLabel" type="Label" parent="SafeMargin/CenterWrap/CenterColumn/TopTitleBadge/TitleVBox"]
+layout_mode = 2
+text = "¡Defiende tu jardín en 2.5D de la invasión subterránea!"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Spacer" type="Control" parent="SafeMargin/CenterWrap/CenterColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="BottomActionBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="TapToStartButton" type="Button" parent="SafeMargin/CenterWrap/CenterColumn/BottomActionBox"]
+custom_minimum_size = Vector2(0, 86)
+layout_mode = 2
+text = "🔨 ¡PRESIONA PARA INICIAR!"
+
+[node name="PlatformHintLabel" type="Label" parent="SafeMargin/CenterWrap/CenterColumn/BottomActionBox"]
+layout_mode = 2
+text = "Toca la pantalla • Haz clic • Presiona [Enter] o Botón (A)"
+horizontal_alignment = 1
+autowrap_mode = 2

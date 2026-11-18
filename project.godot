@@ -10,14 +10,30 @@ config_version=5
 
 [application]
 
-config/name="WhackAMole"
+config/name="Topo Smash: Hard Hat Havoc"
+run/main_scene="res://scenes/ui/title_screen.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+LocalizationManager="*res://scripts/autoload/localization_manager.gd"
+GameManager="*res://scripts/autoload/game_manager.gd"
+
 [display]
 
+window/size/viewport_width=1080
+window/size/viewport_height=1920
+window/size/window_width_override=540
+window/size/window_height_override=960
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+window/handheld/orientation=1
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+pointing/emulate_mouse_from_touch=true
 
 [physics]
 

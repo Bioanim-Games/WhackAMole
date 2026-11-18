@@ -1,0 +1,237 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/main_hub.gd" id="1_hub_script"]
+[ext_resource type="Texture2D" path="res://assets/art/topo_hero.jpg" id="2_hero_tex"]
+
+[node name="MainHub" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hub_script")
+
+[node name="HeroBackdrop" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_hero_tex")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="DarkTintOverlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.04, 0.02, 0.82)
+
+[node name="SafeMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 28
+
+[node name="CenterWrap" type="HBoxContainer" parent="SafeMargin"]
+layout_mode = 2
+alignment = 1
+
+[node name="MainColumn" type="VBoxContainer" parent="SafeMargin/CenterWrap"]
+custom_minimum_size = Vector2(920, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="TopStatusBar" type="PanelContainer" parent="SafeMargin/CenterWrap/MainColumn"]
+layout_mode = 2
+
+[node name="TopHBox" type="HBoxContainer" parent="SafeMargin/CenterWrap/MainColumn/TopStatusBar"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="BackToTitleBtn" type="Button" parent="SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox"]
+layout_mode = 2
+text = "⬅ Inicio"
+
+[node name="RankBadge" type="Label" parent="SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "⭐ Rango: 1"
+horizontal_alignment = 1
+
+[node name="PointsBadge" type="Label" parent="SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🪙 Puntos: 250"
+horizontal_alignment = 1
+
+[node name="MatchesBadge" type="Label" parent="SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🎮 Partidas: 0"
+horizontal_alignment = 1
+
+[node name="LanguageOptionButton" type="OptionButton" parent="SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox"]
+custom_minimum_size = Vector2(225, 38)
+layout_mode = 2
+
+[node name="ProgressionCard" type="PanelContainer" parent="SafeMargin/CenterWrap/MainColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ProgVBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/MainColumn/ProgressionCard"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ProgressionTitle" type="Label" parent="SafeMargin/CenterWrap/MainColumn/ProgressionCard/ProgVBox"]
+layout_mode = 2
+text = "🌱 JARDÍN Y PROGRESO DE TOPOS"
+
+[node name="LawnStatusLabel" type="Label" parent="SafeMargin/CenterWrap/MainColumn/ProgressionCard/ProgVBox"]
+layout_mode = 2
+text = "Jardín Activo: 1 Línea (3 Hoyos) — Entrenamiento"
+autowrap_mode = 2
+
+[node name="PvZLanesBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/MainColumn/ProgressionCard/ProgVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="MoleRosterScroll" type="ScrollContainer" parent="SafeMargin/CenterWrap/MainColumn/ProgressionCard/ProgVBox"]
+custom_minimum_size = Vector2(0, 210)
+layout_mode = 2
+size_flags_vertical = 3
+vertical_scroll_mode = 0
+
+[node name="MoleRosterRow" type="HBoxContainer" parent="SafeMargin/CenterWrap/MainColumn/ProgressionCard/ProgVBox/MoleRosterScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="NextUnlockLabel" type="Label" parent="SafeMargin/CenterWrap/MainColumn/ProgressionCard/ProgVBox"]
+layout_mode = 2
+text = "🔓 Próximo topo (Topo Escudo) en 1 partida(s) más"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="DifficultyCard" type="PanelContainer" parent="SafeMargin/CenterWrap/MainColumn"]
+layout_mode = 2
+
+[node name="DiffVBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/MainColumn/DifficultyCard"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="DiffTitleLabel" type="Label" parent="SafeMargin/CenterWrap/MainColumn/DifficultyCard/DiffVBox"]
+layout_mode = 2
+text = "⚡ CONFIGURACIÓN DEL NIVEL ACTUAL"
+
+[node name="DiffInfoLabel" type="Label" parent="SafeMargin/CenterWrap/MainColumn/DifficultyCard/DiffVBox"]
+layout_mode = 2
+text = "Tiempo del topo afuera: 5.0s • Hoyos activos: 3/9 • Herramienta: Martillo Básico"
+autowrap_mode = 2
+
+[node name="DiffNoteLabel" type="Label" parent="SafeMargin/CenterWrap/MainColumn/DifficultyCard/DiffVBox"]
+layout_mode = 2
+text = "Nota del nivel: El primer topo llega corriendo desde fuera de la pantalla al hoyo más cercano."
+autowrap_mode = 2
+
+[node name="ActionsBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/MainColumn"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PlayMatchButton" type="Button" parent="SafeMargin/CenterWrap/MainColumn/ActionsBox"]
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+text = "🔨 ¡A GOLPEAR! (JUGAR NIVEL 1)"
+
+[node name="OpenStoreButton" type="Button" parent="SafeMargin/CenterWrap/MainColumn/ActionsBox"]
+custom_minimum_size = Vector2(0, 66)
+layout_mode = 2
+text = "🛒 TIENDA DE HERRAMIENTAS"
+
+[node name="SimTestBar" type="PanelContainer" parent="SafeMargin/CenterWrap/MainColumn"]
+layout_mode = 2
+
+[node name="SimHBox" type="HBoxContainer" parent="SafeMargin/CenterWrap/MainColumn/SimTestBar"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="SimTitleLabel" type="Label" parent="SafeMargin/CenterWrap/MainColumn/SimTestBar/SimHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🛠️ Barra de Prueba (Simulador):"
+
+[node name="SimWinButton" type="Button" parent="SafeMargin/CenterWrap/MainColumn/SimTestBar/SimHBox"]
+layout_mode = 2
+text = "+1 Partida Ganada (+150 pts)"
+
+[node name="SimResetButton" type="Button" parent="SafeMargin/CenterWrap/MainColumn/SimTestBar/SimHBox"]
+layout_mode = 2
+text = "Reiniciar Progreso"
+
+[node name="StagePreviewBackdrop" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.78)
+
+[node name="ModalCenter" type="CenterContainer" parent="StagePreviewBackdrop"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="StagePreviewModal" type="PanelContainer" parent="StagePreviewBackdrop/ModalCenter"]
+custom_minimum_size = Vector2(760, 0)
+layout_mode = 2
+
+[node name="ModalVBox" type="VBoxContainer" parent="StagePreviewBackdrop/ModalCenter/StagePreviewModal"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="ModalTitleLabel" type="Label" parent="StagePreviewBackdrop/ModalCenter/StagePreviewModal/ModalVBox"]
+layout_mode = 2
+text = "🎯 VISTA PREVIA DE ARENA 2.5D (NIVEL 1)"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ModalDescLabel" type="Label" parent="StagePreviewBackdrop/ModalCenter/StagePreviewModal/ModalVBox"]
+layout_mode = 2
+text = "Detalles del nivel..."
+autowrap_mode = 2
+
+[node name="ModalButtonsHBox" type="HBoxContainer" parent="StagePreviewBackdrop/ModalCenter/StagePreviewModal/ModalVBox"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="ModalSimVictoryBtn" type="Button" parent="StagePreviewBackdrop/ModalCenter/StagePreviewModal/ModalVBox/ModalButtonsHBox"]
+custom_minimum_size = Vector2(280, 58)
+layout_mode = 2
+text = "🏆 Simular Victoria (+150 Puntos)"
+
+[node name="ModalCloseBtn" type="Button" parent="StagePreviewBackdrop/ModalCenter/StagePreviewModal/ModalVBox/ModalButtonsHBox"]
+custom_minimum_size = Vector2(220, 58)
+layout_mode = 2
+text = "Cerrar Vista Previa"
