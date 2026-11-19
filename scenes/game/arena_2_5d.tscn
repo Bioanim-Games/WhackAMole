@@ -23,17 +23,17 @@ ambient_light_energy = 0.75
 tonemap_mode = 2
 
 [sub_resource type="BoxMesh" id="BoxMesh_lawn"]
-size = Vector3(16, 1.8, 14)
+size = Vector3(16, 1.8, 16)
 
 [sub_resource type="BoxMesh" id="BoxMesh_dirt_border"]
-size = Vector3(7.4, 0.06, 7.2)
+size = Vector3(6.4, 0.06, 6.4)
 
 [sub_resource type="BoxMesh" id="BoxMesh_fence"]
 size = Vector3(14, 1.4, 0.25)
 
 [sub_resource type="SphereMesh" id="SphereMesh_bush"]
-radius = 1.35
-height = 2.1
+radius = 1.25
+height = 2.0
 
 [node name="Arena25D" type="Node3D"]
 script = ExtResource("1_arena_script")
@@ -48,8 +48,9 @@ light_energy = 1.25
 shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.669131, 0.743145, 0, -0.743145, 0.669131, 0, 9.2, 8.8)
-fov = 42.0
+transform = Transform3D(1, 0, 0, 0, 0.642788, 0.766044, 0, -0.766044, 0.642788, 0, 10.8, 9.2)
+keep_aspect = 0
+fov = 38.0
 
 [node name="Environment3D" type="Node3D" parent="."]
 
@@ -62,45 +63,45 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.01, 0)
 mesh = SubResource("BoxMesh_dirt_border")
 
 [node name="FenceBackMesh" type="MeshInstance3D" parent="Environment3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, -4.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, -3.8)
 mesh = SubResource("BoxMesh_fence")
 
 [node name="BushLeftMesh" type="MeshInstance3D" parent="Environment3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.2, 0.5, -2.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.4, 0.5, -2.2)
 mesh = SubResource("SphereMesh_bush")
 
 [node name="BushRightMesh" type="MeshInstance3D" parent="Environment3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.2, 0.5, -2.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4, 0.5, -2.2)
 mesh = SubResource("SphereMesh_bush")
 
 [node name="HolesGrid" type="Node3D" parent="."]
 
 [node name="Hole0" parent="HolesGrid" instance=ExtResource("2_hole_scene")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0, -2.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0, -1.95)
 
 [node name="Hole1" parent="HolesGrid" instance=ExtResource("2_hole_scene")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.95)
 
 [node name="Hole2" parent="HolesGrid" instance=ExtResource("2_hole_scene")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0, -2.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0, -1.95)
 
 [node name="Hole3" parent="HolesGrid" instance=ExtResource("2_hole_scene")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0, 0)
 
 [node name="Hole4" parent="HolesGrid" instance=ExtResource("2_hole_scene")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
 
 [node name="Hole5" parent="HolesGrid" instance=ExtResource("2_hole_scene")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0, 0)
 
 [node name="Hole6" parent="HolesGrid" instance=ExtResource("2_hole_scene")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2, 0, 2.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0, 1.95)
 
 [node name="Hole7" parent="HolesGrid" instance=ExtResource("2_hole_scene")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.95)
 
 [node name="Hole8" parent="HolesGrid" instance=ExtResource("2_hole_scene")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0, 2.3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.8, 0, 1.95)
 
 [node name="IntroMole" parent="." instance=ExtResource("3_mole_scene")]
 
@@ -110,7 +111,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2, 0, 2.3)
 
 [node name="HUD" type="CanvasLayer" parent="."]
 
-[node name="CracksLayer" type="Control" parent="HUD"]
+[node name="HUDRoot" type="Control" parent="HUD"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -119,8 +120,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="TimerBarsLayer" type="Control" parent="HUD"]
-layout_mode = 3
+[node name="CracksLayer" type="Control" parent="HUD/HUDRoot"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -128,8 +129,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="FlyingRocksUILayer" type="Control" parent="HUD"]
-layout_mode = 3
+[node name="TimerBarsLayer" type="Control" parent="HUD/HUDRoot"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -137,8 +138,8 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="CalloutsLayer" type="Control" parent="HUD"]
-layout_mode = 3
+[node name="FlyingRocksUILayer" type="Control" parent="HUD/HUDRoot"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -146,99 +147,116 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 
-[node name="SafeMargin" type="MarginContainer" parent="HUD"]
+[node name="CalloutsLayer" type="Control" parent="HUD/HUDRoot"]
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/margin_left = 28
-theme_override_constants/margin_top = 28
-theme_override_constants/margin_right = 28
-theme_override_constants/margin_bottom = 36
 
-[node name="MainHUDVBox" type="VBoxContainer" parent="HUD/SafeMargin"]
+[node name="SafeMargin" type="MarginContainer" parent="HUD/HUDRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 44
+
+[node name="MainHUDVBox" type="VBoxContainer" parent="HUD/HUDRoot/SafeMargin"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="TopBarPanel" type="PanelContainer" parent="HUD/SafeMargin/MainHUDVBox"]
-custom_minimum_size = Vector2(0, 114)
+[node name="TopBarPanel" type="PanelContainer" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox"]
+custom_minimum_size = Vector2(0, 148)
 layout_mode = 2
 
-[node name="TopHBox" type="HBoxContainer" parent="HUD/SafeMargin/MainHUDVBox/TopBarPanel"]
+[node name="TopHBox" type="HBoxContainer" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox/TopBarPanel"]
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 16
 alignment = 1
 
-[node name="ExitVillageBtn" type="Button" parent="HUD/SafeMargin/MainHUDVBox/TopBarPanel/TopHBox"]
-custom_minimum_size = Vector2(215, 84)
+[node name="ExitVillageBtn" type="Button" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox/TopBarPanel/TopHBox"]
+custom_minimum_size = Vector2(220, 108)
 layout_mode = 2
 text = "⬅ Aldea"
 
-[node name="TimerBadge" type="Label" parent="HUD/SafeMargin/MainHUDVBox/TopBarPanel/TopHBox"]
+[node name="TimerBadge" type="Label" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox/TopBarPanel/TopHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "⏱️ 45s"
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="HeartsBadge" type="Label" parent="HUD/SafeMargin/MainHUDVBox/TopBarPanel/TopHBox"]
+[node name="HeartsBadge" type="Label" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox/TopBarPanel/TopHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "❤️❤️❤️"
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="ScoreBadge" type="Label" parent="HUD/SafeMargin/MainHUDVBox/TopBarPanel/TopHBox"]
+[node name="ScoreBadge" type="Label" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox/TopBarPanel/TopHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "🏆 0"
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="CenterSpacerTop" type="Control" parent="HUD/SafeMargin/MainHUDVBox"]
+[node name="CenterSpacerTop" type="Control" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox"]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="IntroBannerCenter" type="CenterContainer" parent="HUD/SafeMargin/MainHUDVBox"]
+[node name="IntroBannerCenter" type="CenterContainer" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox"]
 layout_mode = 2
 mouse_filter = 2
 
-[node name="IntroBannerPanel" type="PanelContainer" parent="HUD/SafeMargin/MainHUDVBox/IntroBannerCenter"]
-custom_minimum_size = Vector2(820, 128)
+[node name="IntroBannerPanel" type="PanelContainer" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox/IntroBannerCenter"]
+custom_minimum_size = Vector2(920, 150)
 layout_mode = 2
 mouse_filter = 2
 
-[node name="IntroBannerLabel" type="Label" parent="HUD/SafeMargin/MainHUDVBox/IntroBannerCenter/IntroBannerPanel"]
+[node name="IntroBannerLabel" type="Label" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox/IntroBannerCenter/IntroBannerPanel"]
 layout_mode = 2
 text = "👀 ¡UN TOPO ENTRA AL JARDÍN!"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 2
 
-[node name="CenterSpacerBottom" type="Control" parent="HUD/SafeMargin/MainHUDVBox"]
+[node name="CenterSpacerBottom" type="Control" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox"]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="BottomEvadeBox" type="HBoxContainer" parent="HUD/SafeMargin/MainHUDVBox"]
+[node name="BottomEvadeBox" type="HBoxContainer" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox"]
 layout_mode = 2
 alignment = 1
 
-[node name="EvadeRockButton" type="Button" parent="HUD/SafeMargin/MainHUDVBox/BottomEvadeBox"]
-custom_minimum_size = Vector2(920, 138)
+[node name="EvadeRockButton" type="Button" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox/BottomEvadeBox"]
+custom_minimum_size = Vector2(0, 176)
 layout_mode = 2
-text = "🛡️ LISTO PARA ESQUIVAR ROCAS [ESPACIO]"
+size_flags_horizontal = 3
+text = "🛡️ LISTO PARA ESQUIVAR ROCAS"
 
-[node name="SummaryBackdrop" type="ColorRect" parent="HUD"]
+[node name="SummaryBackdrop" type="ColorRect" parent="HUD/HUDRoot"]
 visible = false
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0, 0, 0, 0.82)
+color = Color(0, 0, 0, 0.84)
 
-[node name="SummaryCenter" type="CenterContainer" parent="HUD/SummaryBackdrop"]
+[node name="SummaryCenter" type="CenterContainer" parent="HUD/HUDRoot/SummaryBackdrop"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -246,32 +264,32 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="SummaryCard" type="PanelContainer" parent="HUD/SummaryBackdrop/SummaryCenter"]
-custom_minimum_size = Vector2(880, 0)
+[node name="SummaryCard" type="PanelContainer" parent="HUD/HUDRoot/SummaryBackdrop/SummaryCenter"]
+custom_minimum_size = Vector2(920, 0)
 layout_mode = 2
 
-[node name="SummaryVBox" type="VBoxContainer" parent="HUD/SummaryBackdrop/SummaryCenter/SummaryCard"]
+[node name="SummaryVBox" type="VBoxContainer" parent="HUD/HUDRoot/SummaryBackdrop/SummaryCenter/SummaryCard"]
 layout_mode = 2
-theme_override_constants/separation = 26
+theme_override_constants/separation = 28
 
-[node name="SummaryTitleLabel" type="Label" parent="HUD/SummaryBackdrop/SummaryCenter/SummaryCard/SummaryVBox"]
+[node name="SummaryTitleLabel" type="Label" parent="HUD/HUDRoot/SummaryBackdrop/SummaryCenter/SummaryCard/SummaryVBox"]
 layout_mode = 2
 text = "🏆 ¡NIVEL 1 COMPLETADO!"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="SummaryStatsLabel" type="Label" parent="HUD/SummaryBackdrop/SummaryCenter/SummaryCard/SummaryVBox"]
+[node name="SummaryStatsLabel" type="Label" parent="HUD/HUDRoot/SummaryBackdrop/SummaryCenter/SummaryCard/SummaryVBox"]
 layout_mode = 2
 text = "Estadísticas..."
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="SummaryNextButton" type="Button" parent="HUD/SummaryBackdrop/SummaryCenter/SummaryCard/SummaryVBox"]
-custom_minimum_size = Vector2(0, 136)
+[node name="SummaryNextButton" type="Button" parent="HUD/HUDRoot/SummaryBackdrop/SummaryCenter/SummaryCard/SummaryVBox"]
+custom_minimum_size = Vector2(0, 152)
 layout_mode = 2
 text = "🔨 ¡SIGUIENTE NIVEL!"
 
-[node name="SummaryVillageButton" type="Button" parent="HUD/SummaryBackdrop/SummaryCenter/SummaryCard/SummaryVBox"]
-custom_minimum_size = Vector2(0, 122)
+[node name="SummaryVillageButton" type="Button" parent="HUD/HUDRoot/SummaryBackdrop/SummaryCenter/SummaryCard/SummaryVBox"]
+custom_minimum_size = Vector2(0, 136)
 layout_mode = 2
 text = "🏡 VOLVER A LA ALDEA"
