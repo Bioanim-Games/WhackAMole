@@ -8,8 +8,8 @@
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_sunny"]
 sky_top_color = Color(0.18, 0.58, 0.96, 1)
 sky_horizon_color = Color(0.76, 0.91, 1, 1)
-ground_bottom_color = Color(0.14, 0.42, 0.2, 1)
-ground_horizon_color = Color(0.45, 0.78, 0.48, 1)
+ground_bottom_color = Color(0.18, 0.8, 0.44, 1)
+ground_horizon_color = Color(0.18, 0.8, 0.44, 1)
 
 [sub_resource type="Sky" id="Sky_sunny"]
 sky_material = SubResource("ProceduralSkyMaterial_sunny")
@@ -23,7 +23,7 @@ ambient_light_energy = 0.75
 tonemap_mode = 2
 
 [sub_resource type="BoxMesh" id="BoxMesh_lawn"]
-size = Vector3(16, 1.8, 16)
+size = Vector3(28, 1.8, 36)
 
 [sub_resource type="BoxMesh" id="BoxMesh_dirt_border"]
 size = Vector3(6.4, 0.06, 6.4)
@@ -55,7 +55,7 @@ fov = 38.0
 [node name="Environment3D" type="Node3D" parent="."]
 
 [node name="LawnGroundMesh" type="MeshInstance3D" parent="Environment3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.9, -6)
 mesh = SubResource("BoxMesh_lawn")
 
 [node name="DirtBorderMesh" type="MeshInstance3D" parent="Environment3D"]
@@ -210,17 +210,12 @@ text = "🏆 0"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CenterSpacerTop" type="Control" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox"]
-layout_mode = 2
-size_flags_vertical = 3
-mouse_filter = 2
-
 [node name="IntroBannerCenter" type="CenterContainer" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox"]
 layout_mode = 2
 mouse_filter = 2
 
 [node name="IntroBannerPanel" type="PanelContainer" parent="HUD/HUDRoot/SafeMargin/MainHUDVBox/IntroBannerCenter"]
-custom_minimum_size = Vector2(920, 150)
+custom_minimum_size = Vector2(860, 112)
 layout_mode = 2
 mouse_filter = 2
 

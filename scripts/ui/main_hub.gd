@@ -1,15 +1,14 @@
 extends Control
 
-## Friendly Village Main Hub featuring a sunny procedural Village background,
-## simple Top Bar with Points (🏆) & Coins (🪙), and 4 big, easy-to-read buttons:
-## PLAY, STORE, PROFILE/SCORES, and SETTINGS (Language, Music, SFX).
-## Zero enemy spoilers on the Hub.
+## Illustrated Village Main Hub featuring village_hub_bg.jpg, front-camera safe-area
+## detection, rustic oak Top Bar with Points (🏆) & Coins (🪙), and compact
+## rustic timber/tavern-sign buttons nestled inside the bottom sandy clearing.
 
 const TITLE_SCENE_PATH: String = "res://scenes/ui/title_screen.tscn"
 const STORE_SCENE_PATH: String = "res://scenes/ui/store_screen.tscn"
 const ARENA_SCENE_PATH: String = "res://scenes/game/arena_2_5d.tscn"
 
-@onready var village_bg_holder: Control = $VillageBackdropHolder
+@onready var safe_margin: MarginContainer = $SafeMargin
 @onready var top_bar_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/TopStatusBar
 @onready var back_title_btn: Button = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/BackToTitleBtn
 @onready var points_badge_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/PointsBadgePanel
@@ -17,13 +16,10 @@ const ARENA_SCENE_PATH: String = "res://scenes/game/arena_2_5d.tscn"
 @onready var coins_badge_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/CoinsBadgePanel
 @onready var coins_label: Label = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/CoinsBadgePanel/CoinsBadge
 
-@onready var village_sign_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/VillageSignBanner
-@onready var village_title_lbl: Label = $SafeMargin/CenterWrap/MainColumn/VillageSignBanner/VillageTitleLabel
-
-@onready var play_btn: Button = $SafeMargin/CenterWrap/MainColumn/MenuButtonsBox/PlayMatchButton
-@onready var store_btn: Button = $SafeMargin/CenterWrap/MainColumn/MenuButtonsBox/OpenStoreButton
-@onready var profile_btn: Button = $SafeMargin/CenterWrap/MainColumn/MenuButtonsBox/OpenProfileButton
-@onready var settings_btn: Button = $SafeMargin/CenterWrap/MainColumn/MenuButtonsBox/OpenSettingsButton
+@onready var play_btn: Button = $SafeMargin/CenterWrap/MainColumn/ClearingButtonsWrap/MenuButtonsBox/PlayMatchButton
+@onready var store_btn: Button = $SafeMargin/CenterWrap/MainColumn/ClearingButtonsWrap/MenuButtonsBox/OpenStoreButton
+@onready var profile_btn: Button = $SafeMargin/CenterWrap/MainColumn/ClearingButtonsWrap/MenuButtonsBox/SecondaryRowHBox/OpenProfileButton
+@onready var settings_btn: Button = $SafeMargin/CenterWrap/MainColumn/ClearingButtonsWrap/MenuButtonsBox/SecondaryRowHBox/OpenSettingsButton
 
 @onready var info_modal_backdrop: ColorRect = $InfoModalBackdrop
 @onready var info_modal_card: PanelContainer = $InfoModalBackdrop/ModalCenter/InfoModalCard
@@ -45,11 +41,10 @@ const ARENA_SCENE_PATH: String = "res://scenes/game/arena_2_5d.tscn"
 @onready var sfx_slider: HSlider = $SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/SfxRow/SfxSlider
 @onready var close_settings_btn: Button = $SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/CloseSettingsButton
 
-var _active_info_mode: String = "play"
-
 
 func _ready() -> void:
-	_build_village_scene()
+	_apply_safe_area()
+	get_viewport().size_changed.connect(_apply_safe_area)
 	_apply_styles()
 	_populate_language_selector()
 	_sync_audio_controls()
@@ -77,40 +72,34 @@ func _ready() -> void:
 	play_btn.grab_focus()
 
 
-func _build_village_scene() -> void:
-	var village_control: Control = UIThemeBuilder.build_village_background()
-	village_bg_holder.add_child(village_control)
+func _apply_safe_area() -> void:
+	UIThemeBuilder.apply_device_safe_area(safe_margin, 28, 36, 28, 48)
 
 
 func _apply_styles() -> void:
 	top_bar_panel.add_theme_stylebox_override(
 		"panel",
-		UIThemeBuilder.make_panel_style(Color(0.14, 0.09, 0.05, 0.92), Color("#D49B35"), 26, 4, 16)
+		UIThemeBuilder.make_panel_style(Color(0.17, 0.09, 0.04, 0.92), Color("#D99B26"), 26, 4, 14)
 	)
 	points_badge_panel.add_theme_stylebox_override(
 		"panel",
-		UIThemeBuilder.make_panel_style(Color(0.20, 0.13, 0.07, 0.96), Color("#5DADE2"), 22, 3, 14)
+		UIThemeBuilder.make_panel_style(Color(0.26, 0.15, 0.08, 0.96), Color("#E5A93B"), 22, 3, 12)
 	)
 	coins_badge_panel.add_theme_stylebox_override(
 		"panel",
-		UIThemeBuilder.make_panel_style(Color(0.20, 0.13, 0.07, 0.96), Color("#FFB800"), 22, 3, 14)
-	)
-	village_sign_panel.add_theme_stylebox_override(
-		"panel",
-		UIThemeBuilder.make_panel_style(Color("#5D3A1A"), Color("#FFB800"), 28, 5, 22)
+		UIThemeBuilder.make_panel_style(Color(0.26, 0.15, 0.08, 0.96), Color("#FFB800"), 22, 3, 12)
 	)
 	info_modal_card.add_theme_stylebox_override(
 		"panel",
-		UIThemeBuilder.make_panel_style(Color(0.12, 0.08, 0.05, 0.98), Color("#FFB800"), 30, 5, 32)
+		UIThemeBuilder.make_panel_style(Color(0.14, 0.08, 0.04, 0.98), Color("#FFB800"), 30, 5, 32)
 	)
 	settings_modal.add_theme_stylebox_override(
 		"panel",
-		UIThemeBuilder.make_panel_style(Color(0.12, 0.08, 0.05, 0.98), Color("#FFB800"), 30, 5, 32)
+		UIThemeBuilder.make_panel_style(Color(0.14, 0.08, 0.04, 0.98), Color("#FFB800"), 30, 5, 32)
 	)
 
-	points_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#AED6F1"), 8)
-	coins_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#FFE066"), 8)
-	village_title_lbl.label_settings = UIThemeBuilder.make_label_settings(46, Color("#FFF3C4"), 10, Color("#241205"), Vector2(0, 5))
+	points_label.label_settings = UIThemeBuilder.make_label_settings(32, Color("#FFF3C4"), 8, Color("#231208"))
+	coins_label.label_settings = UIThemeBuilder.make_label_settings(32, Color("#FFE066"), 8, Color("#231208"))
 
 	info_title_lbl.label_settings = UIThemeBuilder.make_label_settings(44, Color("#FFE047"), 10)
 	info_desc_lbl.label_settings = UIThemeBuilder.make_label_settings(32, Color("#FFF7E6"), 7)
@@ -120,11 +109,12 @@ func _apply_styles() -> void:
 	music_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#58D68D"), 7)
 	sfx_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#5DADE2"), 7)
 
-	UIThemeBuilder.apply_arcade_button_style(back_title_btn, Color("#6E4726"), Color("#422813"), Color.WHITE, 32, 20, 8)
-	UIThemeBuilder.apply_arcade_button_style(play_btn, Color("#FFB800"), Color("#B86B00"), Color("#FFFDF5"), 52, 30, 12)
-	UIThemeBuilder.apply_arcade_button_style(store_btn, Color("#27AE60"), Color("#196F3D"), Color.WHITE, 44, 28, 10)
-	UIThemeBuilder.apply_arcade_button_style(profile_btn, Color("#2980B9"), Color("#1B4F72"), Color.WHITE, 40, 26, 10)
-	UIThemeBuilder.apply_arcade_button_style(settings_btn, Color("#5D6D7E"), Color("#34495E"), Color.WHITE, 40, 26, 10)
+	# Rustic Village Timber & Tavern-Sign button styling (SPEC-M2.1-03)
+	UIThemeBuilder.apply_village_button_style(back_title_btn, Color("#7A4924"), Color("#3E210C"), Color("#FFF5D6"), 30, 20, 8)
+	UIThemeBuilder.apply_village_button_style(play_btn, Color("#F59E0B"), Color("#7C2D12"), Color("#FFFDF5"), 48, 28, 13)
+	UIThemeBuilder.apply_village_button_style(store_btn, Color("#D9531E"), Color("#6E2007"), Color("#FFF7E6"), 42, 26, 11)
+	UIThemeBuilder.apply_village_button_style(profile_btn, Color("#8C5227"), Color("#43230C"), Color("#FCE7B2"), 31, 24, 10)
+	UIThemeBuilder.apply_village_button_style(settings_btn, Color("#6E4223"), Color("#361D0A"), Color("#FCE7B2"), 31, 24, 10)
 
 	UIThemeBuilder.apply_arcade_button_style(info_reward_btn, Color("#27AE60"), Color("#196F3D"), Color.WHITE, 34, 22, 9)
 	UIThemeBuilder.apply_arcade_button_style(info_close_btn, Color("#E74C3C"), Color("#922B21"), Color.WHITE, 36, 22, 9)
@@ -188,7 +178,6 @@ func _refresh_all() -> void:
 	points_label.text = "🏆 %s: %d" % [LocalizationManager.t("LBL_POINTS"), GameManager.total_points]
 	coins_label.text = "🪙 %s: %d" % [LocalizationManager.t("LBL_COINS"), GameManager.total_coins]
 
-	village_title_lbl.text = LocalizationManager.t("HUB_VILLAGE_TITLE")
 	play_btn.text = LocalizationManager.t("BTN_HUB_PLAY")
 	store_btn.text = LocalizationManager.t("BTN_HUB_STORE")
 	profile_btn.text = LocalizationManager.t("BTN_HUB_PROFILE")
@@ -205,23 +194,20 @@ func _refresh_all() -> void:
 
 func _refresh_info_modal_texts() -> void:
 	info_close_btn.text = LocalizationManager.t("BTN_CLOSE")
-	if _active_info_mode == "play":
-		var stage_num: int = GameManager.get_current_stage_number()
-		info_title_lbl.text = LocalizationManager.t("PLAY_READY_TITLE", {"level": stage_num})
-		info_desc_lbl.text = LocalizationManager.t("PLAY_READY_DESC")
-		info_reward_btn.visible = true
-		info_reward_btn.text = LocalizationManager.t("BTN_SIM_WIN_REWARD")
+	info_title_lbl.text = LocalizationManager.t("PROFILE_SOON_TITLE")
+	info_desc_lbl.text = LocalizationManager.t(
+		"PROFILE_SOON_DESC",
+		{
+			"points": GameManager.total_points,
+			"coins": GameManager.total_coins,
+			"rank": GameManager.player_rank,
+		}
+	)
+	info_reward_btn.visible = true
+	if GameManager.matches_completed < 10:
+		info_reward_btn.text = LocalizationManager.t("BTN_UNLOCK_ALL_TEST")
 	else:
-		info_title_lbl.text = LocalizationManager.t("PROFILE_SOON_TITLE")
-		info_desc_lbl.text = LocalizationManager.t(
-			"PROFILE_SOON_DESC",
-			{
-				"points": GameManager.total_points,
-				"coins": GameManager.total_coins,
-				"rank": GameManager.player_rank,
-			}
-		)
-		info_reward_btn.visible = false
+		info_reward_btn.text = LocalizationManager.t("BTN_SIM_WIN_REWARD")
 
 
 func _on_back_to_title() -> void:
@@ -237,7 +223,6 @@ func _on_store_pressed() -> void:
 
 
 func _on_profile_pressed() -> void:
-	_active_info_mode = "profile"
 	_refresh_info_modal_texts()
 	info_modal_backdrop.visible = true
 	info_close_btn.grab_focus()
@@ -249,9 +234,11 @@ func _on_settings_pressed() -> void:
 
 
 func _on_info_reward_pressed() -> void:
-	GameManager.record_match_completed(100, 150)
-	info_modal_backdrop.visible = false
-	play_btn.grab_focus()
+	if GameManager.matches_completed < 10:
+		GameManager.unlock_all_moles_for_testing()
+	else:
+		GameManager.record_match_completed(100, 150)
+	_refresh_info_modal_texts()
 
 
 func _on_info_close_pressed() -> void:

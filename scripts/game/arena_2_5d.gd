@@ -1,20 +1,19 @@
 extends Node3D
 
-## 2.5D Backyard Arena implementing SPEC-M2-01 through SPEC-M2-06:
+## 2.5D Backyard Arena implementing Milestone 2 & Milestone 3 (SPEC-M2-01..06 & SPEC-M3-01..05):
 ## - Responsive Portrait (Pixel 5 19.5:9) & Widescreen camera framing
 ## - Full-screen anchored HUDRoot inside CanvasLayer with huge readable buttons/panels
 ## - 3x3 Hole Matrix with PvZ-style 1-to-3 lane rollout
-## - Introductory off-screen Mole walk-in & head-first dive into nearest hole
-## - Basic Hard-Hat ("Casco") Mole spawning with Rank-scaled exposure timer (5.0s base)
-## - Basic 1-Head 3D Hammer strike + "¡AUCH!" floating callout
-## - Interactive 0.95s Rock Flight & Evasion/Deflection right into the center of the screen!
+## - Introductory off-screen Mole walk-in & head-first dive into nearest active hole
+## - All 5 Mole Archetypes ("casco", "escudo", "ninja", "payaso", "dorado") with multi-phase state machine
+## - 2.0s Hammer Stun when striking Ninja's Substitution Log or Clown's Trap Balloon
+## - Interactive 0.95s 3D Projectiles ("rock", "shuriken", "pie") & Evasion/Deflection
 
 const MAIN_HUB_SCENE_PATH: String = "res://scenes/ui/main_hub.tscn"
 const ROUND_DURATION_SECONDS: float = 45.0
 const MAX_SCREEN_HEARTS: int = 3
 const ROCK_FLIGHT_DURATION: float = 0.95
-const POINTS_PER_WHACK: int = 100
-const COINS_PER_WHACK: int = 25
+const HAMMER_STUN_DURATION: float = 2.0
 const POINTS_PER_EVADE: int = 25
 
 enum MatchState {
@@ -37,6 +36,7 @@ enum MatchState {
 @onready var projectiles_root: Node3D = $Projectiles3D
 
 @onready var hud_root: Control = $HUD/HUDRoot
+@onready var safe_margin: MarginContainer = $HUD/HUDRoot/SafeMargin
 @onready var cracks_layer: Control = $HUD/HUDRoot/CracksLayer
 @onready var timer_bars_layer: Control = $HUD/HUDRoot/TimerBarsLayer
 @onready var flying_rocks_ui_layer: Control = $HUD/HUDRoot/FlyingRocksUILayer
@@ -70,6 +70,7 @@ var moles_whacked_count: int = 0
 var rocks_evaded_count: int = 0
 
 var _spawn_cooldown: float = 0.7
+var _hammer_stun_remaining: float = 0.0
 var _base_camera_pos: Vector3 = Vector3(0.0, 10.8, 9.2)
 var _shake_time: float = 0.0
 var _shake_intensity: float = 0.0
@@ -98,18 +99,16 @@ func _ready() -> void:
 ## and all 3 rows (Z = -1.95..+1.95) fit comfortably on tall mobile screens (like Pixel 5 19.5:9)
 ## as well as PC/Console widescreen monitors.
 func _update_camera_framing() -> void:
+	UIThemeBuilder.apply_device_safe_area(safe_margin, 24, 32, 24, 44)
 	var vp_size: Vector2 = get_viewport().get_visible_rect().size
 	if vp_size.y <= 1.0:
 		return
 	var aspect: float = vp_size.x / vp_size.y
 	if aspect < 0.75:
-		# Portrait phone (e.g., Pixel 5 at 9:19.5 -> aspect ~0.46, or standard 9:16 -> 0.5625)
-		# Use KEEP_WIDTH so the horizontal FOV is fixed at 34 degrees, guaranteeing all 3 columns fit with generous side margins!
 		camera_3d.keep_aspect = Camera3D.KEEP_WIDTH
 		camera_3d.fov = 34.0
 		_base_camera_pos = Vector3(0.0, 10.6, 9.0)
 	else:
-		# Tablet / PC / Console Landscape
 		camera_3d.keep_aspect = Camera3D.KEEP_HEIGHT
 		camera_3d.fov = 44.0
 		_base_camera_pos = Vector3(0.0, 9.6, 8.2)
@@ -136,6 +135,17 @@ func _process(delta: float) -> void:
 
 	if match_state != MatchState.PLAYING:
 		return
+
+	if _hammer_stun_remaining > 0.0:
+		_hammer_stun_remaining = maxf(0.0, _hammer_stun_remaining - delta)
+		if _hammer_stun_remaining > 0.0:
+			intro_banner_panel.visible = true
+			intro_banner_label.text = LocalizationManager.t(
+				"ARENA_BANNER_STUNNED",
+				{"sec": "%.1f" % _hammer_stun_remaining}
+			)
+		else:
+			intro_banner_panel.visible = false
 
 	time_remaining = maxf(0.0, time_remaining - delta)
 	_refresh_top_hud()
@@ -190,7 +200,7 @@ func _apply_hud_styles() -> void:
 	timer_label.label_settings = UIThemeBuilder.make_label_settings(44, Color("#FFF3C4"), 10)
 	hearts_label.label_settings = UIThemeBuilder.make_label_settings(44, Color("#FF6B6B"), 10)
 	score_label.label_settings = UIThemeBuilder.make_label_settings(44, Color("#58D68D"), 10)
-	intro_banner_label.label_settings = UIThemeBuilder.make_label_settings(52, Color("#FFE047"), 12)
+	intro_banner_label.label_settings = UIThemeBuilder.make_label_settings(42, Color("#FFE047"), 10)
 
 	summary_title_lbl.label_settings = UIThemeBuilder.make_label_settings(52, Color("#FFE047"), 12)
 	summary_stats_lbl.label_settings = UIThemeBuilder.make_label_settings(38, Color("#FFF8E7"), 9)
@@ -212,6 +222,10 @@ func _setup_holes_matrix() -> void:
 		holes.append(hole_node)
 		hole_node.hole_tapped.connect(_on_hole_tapped)
 		hole_node.mole.mole_whacked.connect(_on_mole_whacked)
+		hole_node.mole.attack_blocked.connect(_on_mole_attack_blocked)
+		hole_node.mole.attack_dodged.connect(_on_mole_attack_dodged)
+		hole_node.mole.trap_triggered.connect(_on_mole_trap_triggered)
+		hole_node.mole.self_stun_started.connect(_on_mole_self_stun_started)
 		hole_node.mole.rock_thrown.connect(_on_mole_rock_thrown)
 		hole_node.mole.taunt_started.connect(_on_mole_taunt_started)
 
@@ -246,6 +260,7 @@ func _start_new_round() -> void:
 	moles_whacked_count = 0
 	rocks_evaded_count = 0
 	_spawn_cooldown = 0.6
+	_hammer_stun_remaining = 0.0
 
 	summary_backdrop.visible = false
 	_clear_flying_rocks()
@@ -264,7 +279,8 @@ func _start_new_round() -> void:
 	intro_banner_label.text = LocalizationManager.t("ARENA_INTRO_INCOMING")
 	var target_hole_pos: Vector3 = holes[3].global_position
 	var offscreen_start: Vector3 = target_hole_pos + Vector3(-2.6, 0.0, 0.0)
-	intro_mole.play_intro_walk_in(offscreen_start, target_hole_pos)
+	var featured_id: String = String(GameManager.get_featured_mole_for_current_stage().get("id", "casco"))
+	intro_mole.play_intro_walk_in(offscreen_start, target_hole_pos, featured_id)
 
 
 func _on_intro_walk_finished() -> void:
@@ -272,7 +288,8 @@ func _on_intro_walk_finished() -> void:
 	var t: Tween = create_tween()
 	t.tween_interval(0.65)
 	t.tween_callback(func() -> void:
-		intro_banner_panel.visible = false
+		if _hammer_stun_remaining <= 0.0:
+			intro_banner_panel.visible = false
 		match_state = MatchState.PLAYING
 	)
 
@@ -294,7 +311,8 @@ func _try_spawn_random_mole() -> void:
 
 	var chosen: Hole3D = candidates[randi() % candidates.size()]
 	var exposure_sec: float = GameManager.get_current_mole_exposure_seconds()
-	chosen.spawn_mole(exposure_sec)
+	var mole_type_id: String = GameManager.pick_mole_type_for_spawn()
+	chosen.spawn_mole(exposure_sec, mole_type_id)
 
 	var base_interval: float = clampf(1.55 - float(GameManager.player_rank - 1) * 0.08, 0.65, 1.55)
 	_spawn_cooldown = randf_range(base_interval * 0.75, base_interval * 1.15)
@@ -303,20 +321,69 @@ func _try_spawn_random_mole() -> void:
 func _on_hole_tapped(hole_index: int, world_pos: Vector3) -> void:
 	if match_state != MatchState.PLAYING:
 		return
+	if _hammer_stun_remaining > 0.0:
+		_spawn_floating_callout(
+			world_pos + Vector3(0, 0.9, 0),
+			LocalizationManager.t("ARENA_CALLOUT_STUNNED"),
+			Color("#AF7AC5")
+		)
+		return
 	hammer_3d.play_strike_at(world_pos)
 	var h: Hole3D = holes[hole_index]
 	h.mole.whack()
 
 
-func _on_mole_whacked(_hole_index: int, world_pos: Vector3) -> void:
+func _on_mole_whacked(_hole_index: int, world_pos: Vector3, mole_type: String, points: int, coins: int) -> void:
 	moles_whacked_count += 1
-	round_points += POINTS_PER_WHACK
-	round_coins += COINS_PER_WHACK
+	round_points += points
+	round_coins += coins
 	_refresh_top_hud()
+	if mole_type == "dorado":
+		_spawn_floating_callout(
+			world_pos,
+			LocalizationManager.t("ARENA_CALLOUT_GOLDEN", {"pts": points}),
+			Color("#FFD700")
+		)
+	else:
+		_spawn_floating_callout(
+			world_pos,
+			LocalizationManager.t("ARENA_CALLOUT_OUCH", {"pts": points}),
+			Color("#FFE047")
+		)
+
+
+func _on_mole_attack_blocked(_hole_index: int, world_pos: Vector3) -> void:
+	_trigger_camera_shake(0.14, 0.12)
 	_spawn_floating_callout(
 		world_pos,
-		LocalizationManager.t("ARENA_CALLOUT_OUCH", {"pts": POINTS_PER_WHACK}),
-		Color("#FFE047")
+		LocalizationManager.t("ARENA_CALLOUT_BLOCKED"),
+		Color("#5DADE2")
+	)
+
+
+func _on_mole_attack_dodged(_hole_index: int, world_pos: Vector3) -> void:
+	_spawn_floating_callout(
+		world_pos,
+		LocalizationManager.t("ARENA_CALLOUT_DODGED"),
+		Color("#F5B041")
+	)
+
+
+func _on_mole_trap_triggered(_hole_index: int, world_pos: Vector3, _mole_type: String) -> void:
+	_hammer_stun_remaining = HAMMER_STUN_DURATION
+	_trigger_camera_shake(0.28, 0.24)
+	_spawn_floating_callout(
+		world_pos,
+		LocalizationManager.t("ARENA_CALLOUT_STUNNED"),
+		Color("#AF7AC5")
+	)
+
+
+func _on_mole_self_stun_started(_hole_index: int, world_pos: Vector3) -> void:
+	_spawn_floating_callout(
+		world_pos,
+		LocalizationManager.t("ARENA_CALLOUT_SELF_STUN"),
+		Color("#58D68D")
 	)
 
 
@@ -328,33 +395,63 @@ func _on_mole_taunt_started(_hole_index: int, world_pos: Vector3) -> void:
 	)
 
 
-## Spawns a 3D rock that flies directly along the camera's view centerline so it stays
-## dead-center on a Pixel 5 screen, tracked by a huge 240x240px tap target button!
-func _on_mole_rock_thrown(_hole_index: int, start_world_pos: Vector3) -> void:
+## Spawns a 3D projectile ("rock", "shuriken", or "pie") that flies directly along the camera's
+## view centerline so it stays dead-center on a Pixel 5 screen, tracked by a 240x240px tap target button!
+func _on_mole_rock_thrown(_hole_index: int, start_world_pos: Vector3, projectile_type: String = "rock") -> void:
 	if match_state != MatchState.PLAYING:
 		return
 
-	var rock_mesh := MeshInstance3D.new()
-	var sphere := SphereMesh.new()
-	sphere.radius = 0.32
-	sphere.height = 0.60
-	sphere.radial_segments = 10
-	sphere.rings = 8
-	rock_mesh.mesh = sphere
-	var rock_mat := StandardMaterial3D.new()
-	rock_mat.albedo_color = Color("#95A5A6")
-	rock_mat.roughness = 0.85
-	rock_mesh.material_override = rock_mat
-	projectiles_root.add_child(rock_mesh)
-	rock_mesh.global_position = start_world_pos
+	var proj_mesh := MeshInstance3D.new()
+	var proj_mat := StandardMaterial3D.new()
+	var target_text_key: String = "ARENA_ROCK_TARGET"
+	var btn_bg_color: Color = Color(0.91, 0.25, 0.20, 0.94)
+
+	match projectile_type:
+		"shuriken":
+			var star_cyl := CylinderMesh.new()
+			star_cyl.top_radius = 0.42
+			star_cyl.bottom_radius = 0.42
+			star_cyl.height = 0.08
+			star_cyl.radial_segments = 4
+			proj_mesh.mesh = star_cyl
+			proj_mat.albedo_color = Color("#D0D3D4")
+			proj_mat.metallic = 0.85
+			proj_mat.roughness = 0.20
+			target_text_key = "ARENA_SHURIKEN_TARGET"
+			btn_bg_color = Color(0.80, 0.16, 0.24, 0.94)
+		"pie":
+			var pie_cyl := CylinderMesh.new()
+			pie_cyl.top_radius = 0.38
+			pie_cyl.bottom_radius = 0.32
+			pie_cyl.height = 0.22
+			pie_cyl.radial_segments = 12
+			proj_mesh.mesh = pie_cyl
+			proj_mat.albedo_color = Color("#FFF8E7")
+			proj_mat.roughness = 0.55
+			target_text_key = "ARENA_PIE_TARGET"
+			btn_bg_color = Color(0.68, 0.32, 0.78, 0.94)
+		_:
+			var sphere := SphereMesh.new()
+			sphere.radius = 0.32
+			sphere.height = 0.60
+			sphere.radial_segments = 10
+			sphere.rings = 8
+			proj_mesh.mesh = sphere
+			proj_mat.albedo_color = Color("#95A5A6")
+			proj_mat.roughness = 0.85
+			target_text_key = "ARENA_ROCK_TARGET"
+
+	proj_mesh.material_override = proj_mat
+	projectiles_root.add_child(proj_mesh)
+	proj_mesh.global_position = start_world_pos
 
 	var rock_target_btn := Button.new()
 	rock_target_btn.custom_minimum_size = Vector2(240, 240)
 	rock_target_btn.size = Vector2(240, 240)
-	rock_target_btn.text = LocalizationManager.t("ARENA_ROCK_TARGET")
+	rock_target_btn.text = LocalizationManager.t(target_text_key)
 	UIThemeBuilder.apply_arcade_button_style(
 		rock_target_btn,
-		Color(0.91, 0.25, 0.20, 0.94),
+		btn_bg_color,
 		Color("#FFE047"),
 		Color("#FFFDF5"),
 		38,
@@ -363,7 +460,6 @@ func _on_mole_rock_thrown(_hole_index: int, start_world_pos: Vector3) -> void:
 	)
 	flying_rocks_ui_layer.add_child(rock_target_btn)
 
-	# Target a point 3.2 units directly in front of the camera lens along its view axis!
 	var cam_forward: Vector3 = -camera_3d.global_transform.basis.z.normalized()
 	var cam_right: Vector3 = camera_3d.global_transform.basis.x.normalized()
 	var cam_up: Vector3 = camera_3d.global_transform.basis.y.normalized()
@@ -375,11 +471,12 @@ func _on_mole_rock_thrown(_hole_index: int, start_world_pos: Vector3) -> void:
 	)
 
 	var rock_entry: Dictionary = {
-		"mesh": rock_mesh,
+		"mesh": proj_mesh,
 		"btn": rock_target_btn,
 		"start": start_world_pos,
 		"end": end_world_pos,
 		"elapsed": 0.0,
+		"type": projectile_type,
 	}
 	_flying_rocks.append(rock_entry)
 
@@ -411,6 +508,7 @@ func _update_flying_rocks(delta: float) -> void:
 		if is_instance_valid(mesh):
 			mesh.global_position = pos
 			mesh.rotation.x += delta * 9.0
+			mesh.rotation.y += delta * 14.0
 			mesh.rotation.z += delta * 7.0
 			var s: float = lerpf(0.9, 1.9, t)
 			mesh.scale = Vector3(s, s, s)
@@ -525,7 +623,7 @@ func _update_hole_exposure_bars() -> void:
 	for i: int in range(holes.size()):
 		var h: Hole3D = holes[i]
 		var bar: ProgressBar = _hole_timer_bars[i]
-		if h.is_lane_active and h.mole.state == Mole3D.State.EXPOSED:
+		if h.is_lane_active and h.mole.is_showing_status_bar():
 			var ratio: float = h.mole.get_exposure_ratio()
 			bar.visible = true
 			bar.value = ratio
@@ -533,12 +631,20 @@ func _update_hole_exposure_bars() -> void:
 			bar.position = screen_pos - Vector2(bar.size.x * 0.5, bar.size.y)
 			var fill_sb := bar.get_theme_stylebox("fill") as StyleBoxFlat
 			if fill_sb != null:
-				if ratio > 0.5:
-					fill_sb.bg_color = Color("#58D68D")
-				elif ratio > 0.25:
-					fill_sb.bg_color = Color("#F39C12")
+				var m_state: Mole3D.State = h.mole.state
+				if h.mole.mole_type == "dorado":
+					fill_sb.bg_color = Color("#FFD700")
+				elif m_state == Mole3D.State.SHIELD_UP or m_state == Mole3D.State.NINJA_DASH:
+					fill_sb.bg_color = Color("#3498DB")
+				elif m_state == Mole3D.State.NINJA_LOG_DECOY or m_state == Mole3D.State.CLOWN_BALLOON_TRAP:
+					fill_sb.bg_color = Color("#AF7AC5")
 				else:
-					fill_sb.bg_color = Color("#E74C3C")
+					if ratio > 0.5:
+						fill_sb.bg_color = Color("#58D68D")
+					elif ratio > 0.25:
+						fill_sb.bg_color = Color("#F39C12")
+					else:
+						fill_sb.bg_color = Color("#E74C3C")
 		else:
 			bar.visible = false
 
@@ -621,6 +727,8 @@ func _refresh_top_hud() -> void:
 
 func _trigger_round_end(victory: bool) -> void:
 	match_state = MatchState.VICTORY if victory else MatchState.DEFEAT
+	_hammer_stun_remaining = 0.0
+	intro_banner_panel.visible = false
 	_clear_flying_rocks()
 	for h: Hole3D in holes:
 		h.mole.set_hidden_immediate()

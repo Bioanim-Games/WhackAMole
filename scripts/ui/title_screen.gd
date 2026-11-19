@@ -5,6 +5,7 @@ extends Control
 
 const MAIN_HUB_SCENE_PATH: String = "res://scenes/ui/main_hub.tscn"
 
+@onready var safe_margin: MarginContainer = $SafeMargin
 @onready var hero_art: TextureRect = $BackgroundHolder/HeroArt
 @onready var open_settings_btn: Button = $SafeMargin/CenterWrap/CenterColumn/TopBar/OpenSettingsButton
 @onready var top_title_badge: PanelContainer = $SafeMargin/CenterWrap/CenterColumn/TopTitleBadge
@@ -29,6 +30,8 @@ const MAIN_HUB_SCENE_PATH: String = "res://scenes/ui/main_hub.tscn"
 
 
 func _ready() -> void:
+	_apply_safe_area()
+	get_viewport().size_changed.connect(_apply_safe_area)
 	_apply_procedural_theme()
 	_populate_language_selector()
 	_sync_audio_controls()
@@ -48,6 +51,10 @@ func _ready() -> void:
 	sfx_slider.value_changed.connect(_on_sfx_slider_changed)
 
 	start_button.grab_focus()
+
+
+func _apply_safe_area() -> void:
+	UIThemeBuilder.apply_device_safe_area(safe_margin, 36, 36, 36, 52)
 
 
 func _apply_procedural_theme() -> void:

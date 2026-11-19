@@ -127,6 +127,108 @@ static func apply_arcade_button_style(
 	btn.add_theme_stylebox_override("disabled", disabled)
 
 
+## Automatically detects physical front-camera punch-holes, notches, and gesture bars
+## via DisplayServer.get_display_safe_area() and pushes the MarginContainer down
+## below the front camera (SPEC-M2.1-01).
+static func apply_device_safe_area(
+	margin: MarginContainer,
+	base_left: int = 28,
+	base_top: int = 36,
+	base_right: int = 28,
+	base_bottom: int = 44
+) -> void:
+	if margin == null:
+		return
+
+	var window_size: Vector2i = DisplayServer.window_get_size()
+	var safe_rect: Rect2i = DisplayServer.get_display_safe_area()
+	var vp_size: Vector2 = margin.get_viewport_rect().size
+	if vp_size.x <= 1.0 or vp_size.y <= 1.0:
+		vp_size = Vector2(1080.0, 1920.0)
+
+	var scale_x: float = vp_size.x / float(maxi(1, window_size.x))
+	var scale_y: float = vp_size.y / float(maxi(1, window_size.y))
+
+	var top_inset: int = roundi(float(maxi(0, safe_rect.position.y)) * scale_y)
+	var left_inset: int = roundi(float(maxi(0, safe_rect.position.x)) * scale_x)
+	var bottom_raw: int = maxi(0, window_size.y - (safe_rect.position.y + safe_rect.size.y))
+	var bottom_inset: int = roundi(float(bottom_raw) * scale_y)
+
+	var is_mobile_os: bool = OS.has_feature("mobile") or (OS.get_name() in ["Android", "iOS"])
+	var is_tall_portrait: bool = (vp_size.y / maxf(1.0, vp_size.x)) > 1.82
+	var min_top_safe: int = 128 if (is_mobile_os or is_tall_portrait) else base_top
+	var min_bottom_safe: int = 64 if (is_mobile_os or is_tall_portrait) else base_bottom
+
+	var final_top: int = maxi(base_top + top_inset, min_top_safe)
+	var final_bottom: int = maxi(base_bottom + bottom_inset, min_bottom_safe)
+	var final_left: int = base_left + left_inset
+	var final_right: int = base_right + left_inset
+
+	margin.add_theme_constant_override("margin_top", final_top)
+	margin.add_theme_constant_override("margin_bottom", final_bottom)
+	margin.add_theme_constant_override("margin_left", final_left)
+	margin.add_theme_constant_override("margin_right", final_right)
+
+
+## Rustic hand-drawn Village Timber / Tavern-Sign plaque button style matching
+## the dark ink line-art (#231208) and warm wood tones of village_hub_bg.jpg (SPEC-M2.1-03).
+static func apply_village_button_style(
+	btn: Button,
+	fill_color: Color,
+	lip_color: Color,
+	text_color: Color = Color("#FFFDF5"),
+	font_size: int = 42,
+	corner_radius: int = 24,
+	lip_height: int = 12
+) -> void:
+	btn.add_theme_font_override("font", get_ui_font())
+	btn.add_theme_font_size_override("font_size", font_size)
+	btn.add_theme_color_override("font_color", text_color)
+	btn.add_theme_color_override("font_hover_color", text_color.lightened(0.14))
+	btn.add_theme_color_override("font_pressed_color", text_color)
+	btn.add_theme_color_override("font_focus_color", text_color)
+	btn.add_theme_color_override("font_outline_color", Color("#231208"))
+	btn.add_theme_constant_override("outline_size", 10)
+
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = fill_color
+	normal.border_color = lip_color
+	normal.border_width_left = 5
+	normal.border_width_top = 5
+	normal.border_width_right = 5
+	normal.border_width_bottom = lip_height
+	normal.set_corner_radius_all(corner_radius)
+	normal.shadow_color = Color(0.10, 0.05, 0.01, 0.62)
+	normal.shadow_size = 12
+	normal.shadow_offset = Vector2(0, 6)
+	normal.content_margin_left = 24
+	normal.content_margin_right = 24
+	normal.content_margin_top = 12
+	normal.content_margin_bottom = 16
+
+	var hover: StyleBoxFlat = normal.duplicate()
+	hover.bg_color = fill_color.lightened(0.08)
+	hover.border_color = lip_color.lightened(0.10)
+
+	var pressed: StyleBoxFlat = normal.duplicate()
+	pressed.bg_color = fill_color.darkened(0.08)
+	pressed.border_width_bottom = 5
+	pressed.content_margin_top = 17
+	pressed.content_margin_bottom = 11
+
+	var focus: StyleBoxFlat = hover.duplicate()
+	focus.border_color = Color("#FFE066")
+	focus.border_width_left = 6
+	focus.border_width_top = 6
+	focus.border_width_right = 6
+	focus.border_width_bottom = lip_height
+
+	btn.add_theme_stylebox_override("normal", normal)
+	btn.add_theme_stylebox_override("hover", hover)
+	btn.add_theme_stylebox_override("pressed", pressed)
+	btn.add_theme_stylebox_override("focus", focus)
+
+
 ## Styles an OptionButton AND its PopupMenu so dropdown items are big (32px+) and easy to read.
 static func style_option_button(opt: OptionButton, font_size: int = 32) -> void:
 	opt.add_theme_font_override("font", get_ui_font())

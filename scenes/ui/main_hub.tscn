@@ -1,6 +1,16 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/main_hub.gd" id="1_hub_script"]
+[ext_resource type="Texture2D" path="res://assets/art/village_hub_bg.jpg" id="2_village_bg"]
+
+[sub_resource type="Gradient" id="Gradient_bottom_shade"]
+offsets = PackedFloat32Array(0, 0.58, 0.78, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0.05, 0.01, 0.25, 0.08, 0.04, 0.01, 0.52)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bottom_shade"]
+gradient = SubResource("Gradient_bottom_shade")
+fill_from = Vector2(0.5, 0)
+fill_to = Vector2(0.5, 1)
 
 [node name="MainHub" type="Control"]
 layout_mode = 3
@@ -11,7 +21,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_hub_script")
 
-[node name="VillageBackdropHolder" type="Control" parent="."]
+[node name="VillageHeroArt" type="TextureRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,6 +29,20 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
+texture = ExtResource("2_village_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="BottomClearingShade" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_bottom_shade")
+expand_mode = 1
 
 [node name="SafeMargin" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -27,33 +51,33 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 32
-theme_override_constants/margin_right = 32
-theme_override_constants/margin_bottom = 44
+theme_override_constants/margin_left = 28
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 28
+theme_override_constants/margin_bottom = 52
 
 [node name="CenterWrap" type="HBoxContainer" parent="SafeMargin"]
 layout_mode = 2
 alignment = 1
 
 [node name="MainColumn" type="VBoxContainer" parent="SafeMargin/CenterWrap"]
-custom_minimum_size = Vector2(920, 0)
+custom_minimum_size = Vector2(900, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 26
+theme_override_constants/separation = 18
 
 [node name="TopStatusBar" type="PanelContainer" parent="SafeMargin/CenterWrap/MainColumn"]
-custom_minimum_size = Vector2(0, 108)
+custom_minimum_size = Vector2(0, 104)
 layout_mode = 2
 
 [node name="TopHBox" type="HBoxContainer" parent="SafeMargin/CenterWrap/MainColumn/TopStatusBar"]
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 16
 alignment = 1
 
 [node name="BackToTitleBtn" type="Button" parent="SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox"]
-custom_minimum_size = Vector2(210, 82)
+custom_minimum_size = Vector2(195, 78)
 layout_mode = 2
 text = "⬅ Inicio"
 
@@ -77,47 +101,44 @@ text = "🪙 Monedas: 250"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="TopSpacer" type="Control" parent="SafeMargin/CenterWrap/MainColumn"]
+[node name="ArtworkClearingSpacer" type="Control" parent="SafeMargin/CenterWrap/MainColumn"]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
-[node name="VillageSignBanner" type="PanelContainer" parent="SafeMargin/CenterWrap/MainColumn"]
+[node name="ClearingButtonsWrap" type="CenterContainer" parent="SafeMargin/CenterWrap/MainColumn"]
 layout_mode = 2
 
-[node name="VillageTitleLabel" type="Label" parent="SafeMargin/CenterWrap/MainColumn/VillageSignBanner"]
+[node name="MenuButtonsBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/MainColumn/ClearingButtonsWrap"]
+custom_minimum_size = Vector2(740, 0)
 layout_mode = 2
-text = "🏡 ALDEA CAZA-TOPOS"
-horizontal_alignment = 1
+theme_override_constants/separation = 16
 
-[node name="MenuButtonsBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/MainColumn"]
-layout_mode = 2
-theme_override_constants/separation = 24
-
-[node name="PlayMatchButton" type="Button" parent="SafeMargin/CenterWrap/MainColumn/MenuButtonsBox"]
-custom_minimum_size = Vector2(0, 164)
+[node name="PlayMatchButton" type="Button" parent="SafeMargin/CenterWrap/MainColumn/ClearingButtonsWrap/MenuButtonsBox"]
+custom_minimum_size = Vector2(740, 136)
 layout_mode = 2
 text = "🔨 ¡JUGAR!"
 
-[node name="OpenStoreButton" type="Button" parent="SafeMargin/CenterWrap/MainColumn/MenuButtonsBox"]
-custom_minimum_size = Vector2(0, 138)
+[node name="OpenStoreButton" type="Button" parent="SafeMargin/CenterWrap/MainColumn/ClearingButtonsWrap/MenuButtonsBox"]
+custom_minimum_size = Vector2(740, 118)
 layout_mode = 2
 text = "🛒 TIENDA"
 
-[node name="OpenProfileButton" type="Button" parent="SafeMargin/CenterWrap/MainColumn/MenuButtonsBox"]
-custom_minimum_size = Vector2(0, 126)
+[node name="SecondaryRowHBox" type="HBoxContainer" parent="SafeMargin/CenterWrap/MainColumn/ClearingButtonsWrap/MenuButtonsBox"]
 layout_mode = 2
-text = "🏅 PERFIL Y RÉCORDS"
+theme_override_constants/separation = 20
 
-[node name="OpenSettingsButton" type="Button" parent="SafeMargin/CenterWrap/MainColumn/MenuButtonsBox"]
-custom_minimum_size = Vector2(0, 126)
+[node name="OpenProfileButton" type="Button" parent="SafeMargin/CenterWrap/MainColumn/ClearingButtonsWrap/MenuButtonsBox/SecondaryRowHBox"]
+custom_minimum_size = Vector2(358, 108)
 layout_mode = 2
+size_flags_horizontal = 3
+text = "🏅 PERFIL"
+
+[node name="OpenSettingsButton" type="Button" parent="SafeMargin/CenterWrap/MainColumn/ClearingButtonsWrap/MenuButtonsBox/SecondaryRowHBox"]
+custom_minimum_size = Vector2(358, 108)
+layout_mode = 2
+size_flags_horizontal = 3
 text = "⚙️ AJUSTES"
-
-[node name="BottomSpacer" type="Control" parent="SafeMargin/CenterWrap/MainColumn"]
-custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
-mouse_filter = 2
 
 [node name="InfoModalBackdrop" type="ColorRect" parent="."]
 visible = false
@@ -147,7 +168,7 @@ theme_override_constants/separation = 26
 
 [node name="InfoTitleLabel" type="Label" parent="InfoModalBackdrop/ModalCenter/InfoModalCard/ModalVBox"]
 layout_mode = 2
-text = "🔨 ¡LISTO PARA JUGAR!"
+text = "🏅 PERFIL Y TABLA DE RÉCORDS"
 horizontal_alignment = 1
 autowrap_mode = 2
 
@@ -158,6 +179,7 @@ horizontal_alignment = 1
 autowrap_mode = 2
 
 [node name="InfoRewardBtn" type="Button" parent="InfoModalBackdrop/ModalCenter/InfoModalCard/ModalVBox"]
+visible = false
 custom_minimum_size = Vector2(0, 118)
 layout_mode = 2
 text = "🏆 Ganar Partida (+100 Pts / +150 🪙)"

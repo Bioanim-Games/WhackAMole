@@ -146,6 +146,57 @@ func is_mole_unlocked(mole_id: String) -> bool:
 	return false
 
 
+func get_unlocked_mole_ids() -> Array[String]:
+	var unlocked: Array[String] = []
+	for mole_def: Dictionary in MOLE_DEFINITIONS:
+		if matches_completed >= int(mole_def["required_matches"]):
+			unlocked.append(String(mole_def["id"]))
+	if unlocked.is_empty():
+		unlocked.append("casco")
+	return unlocked
+
+
+func pick_mole_type_for_spawn() -> String:
+	var unlocked: Array[String] = get_unlocked_mole_ids()
+	if unlocked.size() <= 1:
+		return "casco"
+
+	var base_weights: Dictionary = {
+		"casco": 30,
+		"escudo": 28,
+		"ninja": 26,
+		"payaso": 24,
+		"dorado": 14,
+	}
+	var featured_id: String = String(get_featured_mole_for_current_stage().get("id", "casco"))
+	var total_weight: int = 0
+	var pool: Array[Dictionary] = []
+
+	for m_id: String in unlocked:
+		var w: int = int(base_weights.get(m_id, 20))
+		if m_id == featured_id and m_id != "casco":
+			w += 18
+		total_weight += w
+		pool.append({"id": m_id, "weight": w})
+
+	var roll: int = randi() % maxi(1, total_weight)
+	var accum: int = 0
+	for entry: Dictionary in pool:
+		accum += int(entry["weight"])
+		if roll < accum:
+			return String(entry["id"])
+	return unlocked[0]
+
+
+func unlock_all_moles_for_testing() -> void:
+	if matches_completed < 10:
+		matches_completed = 10
+	player_rank = 1 + matches_completed
+	total_coins += 500
+	save_progress()
+	state_changed.emit()
+
+
 func get_featured_mole_for_current_stage() -> Dictionary:
 	var best_unlocked: Dictionary = MOLE_DEFINITIONS[0]
 	for mole_def: Dictionary in MOLE_DEFINITIONS:

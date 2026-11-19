@@ -5,6 +5,7 @@ extends Control
 
 const MAIN_HUB_SCENE_PATH: String = "res://scenes/ui/main_hub.tscn"
 
+@onready var safe_margin: MarginContainer = $SafeMargin
 @onready var header_panel: PanelContainer = $SafeMargin/CenterWrap/StoreColumn/StoreHeader
 @onready var back_btn: Button = $SafeMargin/CenterWrap/StoreColumn/StoreHeader/HeaderHBox/BackHubBtn
 @onready var title_lbl: Label = $SafeMargin/CenterWrap/StoreColumn/StoreHeader/HeaderHBox/TitleVBox/StoreTitleLabel
@@ -19,6 +20,8 @@ const MAIN_HUB_SCENE_PATH: String = "res://scenes/ui/main_hub.tscn"
 
 
 func _ready() -> void:
+	_apply_safe_area()
+	get_viewport().size_changed.connect(_apply_safe_area)
 	_apply_styles()
 	_refresh_store()
 
@@ -26,6 +29,10 @@ func _ready() -> void:
 	GameManager.state_changed.connect(_refresh_store)
 	back_btn.pressed.connect(_on_back_pressed)
 	back_btn.grab_focus()
+
+
+func _apply_safe_area() -> void:
+	UIThemeBuilder.apply_device_safe_area(safe_margin, 30, 30, 30, 36)
 
 
 func _apply_styles() -> void:

@@ -18,6 +18,15 @@ const SUPPORTED_LOCALES: Array[Dictionary] = [
 
 const CATALOG: Dictionary = {
 	"es_419": {
+		"ARENA_CALLOUT_BLOCKED": "🛡️ ¡BLOQUEADO!",
+		"ARENA_CALLOUT_DODGED": "💨 ¡MUY RÁPIDO!",
+		"ARENA_CALLOUT_STUNNED": "⚡ ¡ATURDIDO 2s!",
+		"ARENA_BANNER_STUNNED": "⚡ ¡MARTILLO ATURDIDO! ({sec}s)",
+		"ARENA_CALLOUT_SELF_STUN": "😵 ¡MAREADO! ¡GOLPEA!",
+		"ARENA_CALLOUT_GOLDEN": "✨ ¡TOPO DORADO! +{pts}",
+		"ARENA_SHURIKEN_TARGET": "⭐🎯\n¡TOCA!",
+		"ARENA_PIE_TARGET": "🥧🎯\n¡TOCA!",
+		"BTN_UNLOCK_ALL_TEST": "🔓 Desbloquear 5 Topos y 3 Filas (Prueba)",
 		"ARENA_BTN_EXIT": "⬅ Aldea",
 		"ARENA_INTRO_INCOMING": "👀 ¡UN TOPO ENTRA AL JARDÍN!",
 		"ARENA_INTRO_GO": "🔨 ¡A GOLPEAR!",
@@ -118,6 +127,15 @@ const CATALOG: Dictionary = {
 		"TOOL_WATER_DESC": "[Prototipo] Saca las cabezas de todos los topos sin atacar por 3s con salpicadura al golpear."
 	},
 	"es_ES": {
+		"ARENA_CALLOUT_BLOCKED": "🛡️ ¡BLOQUEADO!",
+		"ARENA_CALLOUT_DODGED": "💨 ¡DEMASIADO RÁPIDO!",
+		"ARENA_CALLOUT_STUNNED": "⚡ ¡ATURDIDO 2s!",
+		"ARENA_BANNER_STUNNED": "⚡ ¡MARTILLO ATURDIDO! ({sec}s)",
+		"ARENA_CALLOUT_SELF_STUN": "😵 ¡MAREADO! ¡ATIZA!",
+		"ARENA_CALLOUT_GOLDEN": "✨ ¡TOPO DORADO! +{pts}",
+		"ARENA_SHURIKEN_TARGET": "⭐🎯\n¡TOCA!",
+		"ARENA_PIE_TARGET": "🥧🎯\n¡TOCA!",
+		"BTN_UNLOCK_ALL_TEST": "🔓 Desbloquear 5 Topos y 3 Filas (Prueba)",
 		"ARENA_BTN_EXIT": "⬅ Aldea",
 		"ARENA_INTRO_INCOMING": "👀 ¡UN TOPO ENTRA AL JARDÍN!",
 		"ARENA_INTRO_GO": "🔨 ¡A MACHACAR!",
@@ -218,6 +236,15 @@ const CATALOG: Dictionary = {
 		"TOOL_WATER_DESC": "[Prototipo] Saca las cabezas de todos los topos sin atacar por 3s con chapuzón al golpear."
 	},
 	"pt": {
+		"ARENA_CALLOUT_BLOCKED": "🛡️ BLOQUEADO!",
+		"ARENA_CALLOUT_DODGED": "💨 MUITO RÁPIDO!",
+		"ARENA_CALLOUT_STUNNED": "⚡ ATORDOADO 2s!",
+		"ARENA_BANNER_STUNNED": "⚡ MARTELO ATORDOADO! ({sec}s)",
+		"ARENA_CALLOUT_SELF_STUN": "😵 TONTO! BATA AGORA!",
+		"ARENA_CALLOUT_GOLDEN": "✨ TOUPEIRA DOURADA! +{pts}",
+		"ARENA_SHURIKEN_TARGET": "⭐🎯\nTOQUE!",
+		"ARENA_PIE_TARGET": "🥧🎯\nTOQUE!",
+		"BTN_UNLOCK_ALL_TEST": "🔓 Desbloquear 5 Toupeiras e 3 Linhas (Teste)",
 		"ARENA_BTN_EXIT": "⬅ Vila",
 		"ARENA_INTRO_INCOMING": "👀 UMA TOUPEIRA ENTROU NO JARDIM!",
 		"ARENA_INTRO_GO": "🔨 ESMAGAR!",
@@ -318,6 +345,15 @@ const CATALOG: Dictionary = {
 		"TOOL_WATER_DESC": "[Protótipo] Faz todas as toupeiras colocarem a cabeça para fora sem atacar por 3s."
 	},
 	"fr": {
+		"ARENA_CALLOUT_BLOCKED": "🛡️ BOUCLIER !",
+		"ARENA_CALLOUT_DODGED": "💨 TROP RAPIDE !",
+		"ARENA_CALLOUT_STUNNED": "⚡ ÉTOURDI 2s !",
+		"ARENA_BANNER_STUNNED": "⚡ MARTEAU ÉTOURDI ! ({sec}s)",
+		"ARENA_CALLOUT_SELF_STUN": "😵 SONNÉE ! FRAPPEZ !",
+		"ARENA_CALLOUT_GOLDEN": "✨ TAUPE DORÉE ! +{pts}",
+		"ARENA_SHURIKEN_TARGET": "⭐🎯\nFRAPPE!",
+		"ARENA_PIE_TARGET": "🥧🎯\nFRAPPE!",
+		"BTN_UNLOCK_ALL_TEST": "🔓 Débloquer 5 Taupes & 3 Lignes (Test)",
 		"ARENA_BTN_EXIT": "⬅ Village",
 		"ARENA_INTRO_INCOMING": "👀 UNE TAUPE ENTRE DANS LE JARDIN !",
 		"ARENA_INTRO_GO": "🔨 FRAPPEZ !",
@@ -418,6 +454,15 @@ const CATALOG: Dictionary = {
 		"TOOL_WATER_DESC": "[Prototype] Fait sortir la tête de toutes les taupes sans attaquer pendant 3s."
 	},
 	"de": {
+		"ARENA_CALLOUT_BLOCKED": "🛡️ GEBLOCKT!",
+		"ARENA_CALLOUT_DODGED": "💨 ZU SCHNELL!",
+		"ARENA_CALLOUT_STUNNED": "⚡ BETÄUBT 2s!",
+		"ARENA_BANNER_STUNNED": "⚡ HAMMER BETÄUBT! ({sec}s)",
+		"ARENA_CALLOUT_SELF_STUN": "😵 SCHWINDELIG! SCHLAG ZU!",
+		"ARENA_CALLOUT_GOLDEN": "✨ GOLD-MAULWURF! +{pts}",
+		"ARENA_SHURIKEN_TARGET": "⭐🎯\nTIPPEN!",
+		"ARENA_PIE_TARGET": "🥧🎯\nTIPPEN!",
+		"BTN_UNLOCK_ALL_TEST": "🔓 Alle 5 Maulwürfe & 3 Reihen freischalten (Test)",
 		"ARENA_BTN_EXIT": "⬅ Dorf",
 		"ARENA_INTRO_INCOMING": "👀 EIN MAULWURF BETRITT DEN GARTEN!",
 		"ARENA_INTRO_GO": "🔨 ZUSCHLAGEN!",
@@ -518,6 +563,15 @@ const CATALOG: Dictionary = {
 		"TOOL_WATER_DESC": "[Prototyp] Spült alle Maulwurfsköpfe für 3s ohne Angriff nach oben."
 	},
 	"en": {
+		"ARENA_CALLOUT_BLOCKED": "🛡️ SHIELD BLOCKED!",
+		"ARENA_CALLOUT_DODGED": "💨 TOO FAST!",
+		"ARENA_CALLOUT_STUNNED": "⚡ STUNNED 2s!",
+		"ARENA_BANNER_STUNNED": "⚡ HAMMER STUNNED! ({sec}s)",
+		"ARENA_CALLOUT_SELF_STUN": "😵 DIZZY! HIT NOW!",
+		"ARENA_CALLOUT_GOLDEN": "✨ GOLDEN MOLE! +{pts}",
+		"ARENA_SHURIKEN_TARGET": "⭐🎯\nTAP!",
+		"ARENA_PIE_TARGET": "🥧🎯\nTAP!",
+		"BTN_UNLOCK_ALL_TEST": "🔓 Unlock All 5 Moles & 3 Lanes (Test)",
 		"ARENA_BTN_EXIT": "⬅ Village",
 		"ARENA_INTRO_INCOMING": "👀 A MOLE ENTERS THE LAWN!",
 		"ARENA_INTRO_GO": "🔨 SMASH 'EM!",
@@ -618,6 +672,15 @@ const CATALOG: Dictionary = {
 		"TOOL_WATER_DESC": "[Prototype] Flushes all mole heads out for 3s without attacking, splashing water when whacked."
 	},
 	"ko": {
+		"ARENA_CALLOUT_BLOCKED": "🛡️ 방패 방어!",
+		"ARENA_CALLOUT_DODGED": "💨 너무 빨라요!",
+		"ARENA_CALLOUT_STUNNED": "⚡ 2초 기절!",
+		"ARENA_BANNER_STUNNED": "⚡ 망치 기절 상태! ({sec}초)",
+		"ARENA_CALLOUT_SELF_STUN": "😵 어지러움! 지금 때려요!",
+		"ARENA_CALLOUT_GOLDEN": "✨ 황금 두더지! +{pts}",
+		"ARENA_SHURIKEN_TARGET": "⭐🎯\n터치!",
+		"ARENA_PIE_TARGET": "🥧🎯\n터치!",
+		"BTN_UNLOCK_ALL_TEST": "🔓 5종 두더지 & 3개 라인 모두 해금 (테스트)",
 		"ARENA_BTN_EXIT": "⬅ 마을로",
 		"ARENA_INTRO_INCOMING": "👀 두더지가 정원에 나타났습니다!",
 		"ARENA_INTRO_GO": "🔨 두더지 잡기 시작!",
@@ -718,6 +781,15 @@ const CATALOG: Dictionary = {
 		"TOOL_WATER_DESC": "[프로토타입] 3초 동안 모든 두더지가 공격 없이 고개를 내밀게 만듭니다."
 	},
 	"ja": {
+		"ARENA_CALLOUT_BLOCKED": "🛡️ シールド防御！",
+		"ARENA_CALLOUT_DODGED": "💨 速すぎる！",
+		"ARENA_CALLOUT_STUNNED": "⚡ 2秒スタン！",
+		"ARENA_BANNER_STUNNED": "⚡ ハンマー麻痺中！ ({sec}秒)",
+		"ARENA_CALLOUT_SELF_STUN": "😵 目が回ってる！今だ！",
+		"ARENA_CALLOUT_GOLDEN": "✨ 黄金モグラ！ +{pts}",
+		"ARENA_SHURIKEN_TARGET": "⭐🎯\nタップ!",
+		"ARENA_PIE_TARGET": "🥧🎯\nタップ!",
+		"BTN_UNLOCK_ALL_TEST": "🔓 全5種モグラ＆3列を解放 (テスト)",
 		"ARENA_BTN_EXIT": "⬅ 村へ戻る",
 		"ARENA_INTRO_INCOMING": "👀 モグラが庭に侵入したぞ！",
 		"ARENA_INTRO_GO": "🔨 たたけ！スタート！",
@@ -818,6 +890,15 @@ const CATALOG: Dictionary = {
 		"TOOL_WATER_DESC": "[試作] 3秒間すべてのモグラが攻撃せずに顔を出します。"
 	},
 	"zh_CN": {
+		"ARENA_CALLOUT_BLOCKED": "🛡️ 护盾格挡！",
+		"ARENA_CALLOUT_DODGED": "💨 速度太快！",
+		"ARENA_CALLOUT_STUNNED": "⚡ 眩晕 2 秒！",
+		"ARENA_BANNER_STUNNED": "⚡ 木槌眩晕中！({sec}秒)",
+		"ARENA_CALLOUT_SELF_STUN": "😵 晕头转向！快打！",
+		"ARENA_CALLOUT_GOLDEN": "✨ 黄金地鼠！+{pts}",
+		"ARENA_SHURIKEN_TARGET": "⭐🎯\n点击!",
+		"ARENA_PIE_TARGET": "🥧🎯\n点击!",
+		"BTN_UNLOCK_ALL_TEST": "🔓 解锁全部 5 种地鼠与 3 条路线（测试）",
 		"ARENA_BTN_EXIT": "⬅ 返回小镇",
 		"ARENA_INTRO_INCOMING": "👀 一只地鼠闯进了花园！",
 		"ARENA_INTRO_GO": "🔨 开始猛击！",

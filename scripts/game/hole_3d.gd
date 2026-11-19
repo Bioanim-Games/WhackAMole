@@ -68,9 +68,9 @@ func can_spawn_mole() -> bool:
 	return is_lane_active and mole != null and mole.state == Mole3D.State.HIDDEN
 
 
-func spawn_mole(exposure_sec: float) -> void:
+func spawn_mole(exposure_sec: float, archetype_id: String = "casco") -> void:
 	if can_spawn_mole():
-		mole.spawn_from_hole(exposure_sec)
+		mole.spawn_from_hole(exposure_sec, archetype_id)
 
 
 func _on_tap_area_input_event(
