@@ -1,0 +1,61 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/hole_3d.gd" id="1_hole_script"]
+[ext_resource type="PackedScene" path="res://scenes/moles/mole_3d.tscn" id="2_mole_scene"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_mound"]
+inner_radius = 0.56
+outer_radius = 0.92
+rings = 24
+ring_segments = 16
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_pit"]
+top_radius = 0.62
+bottom_radius = 0.58
+height = 0.08
+
+[sub_resource type="BoxMesh" id="BoxMesh_turf_slab"]
+size = Vector3(1.85, 0.14, 1.85)
+
+[sub_resource type="BoxMesh" id="BoxMesh_plank"]
+size = Vector3(1.65, 0.08, 0.26)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_tap"]
+height = 1.65
+radius = 0.95
+
+[node name="Hole3D" type="Node3D"]
+script = ExtResource("1_hole_script")
+
+[node name="DirtMoundMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.55, 0, 0, 0, 1, 0, 0.06, 0)
+mesh = SubResource("TorusMesh_mound")
+
+[node name="InnerPitMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.02, 0)
+mesh = SubResource("CylinderMesh_pit")
+
+[node name="LockedTurfCover" type="Node3D" parent="."]
+visible = false
+
+[node name="GrassSlab" type="MeshInstance3D" parent="LockedTurfCover"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.08, 0)
+mesh = SubResource("BoxMesh_turf_slab")
+
+[node name="WoodPlankA" type="MeshInstance3D" parent="LockedTurfCover"]
+transform = Transform3D(0.82, 0, 0.57, 0, 1, 0, -0.57, 0, 0.82, 0, 0.18, 0)
+mesh = SubResource("BoxMesh_plank")
+
+[node name="WoodPlankB" type="MeshInstance3D" parent="LockedTurfCover"]
+transform = Transform3D(0.82, 0, -0.57, 0, 1, 0, 0.57, 0, 0.82, 0, 0.22, 0)
+mesh = SubResource("BoxMesh_plank")
+
+[node name="MoleHolder" type="Node3D" parent="."]
+
+[node name="Mole3D" parent="MoleHolder" instance=ExtResource("2_mole_scene")]
+
+[node name="TapArea3D" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TapArea3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.55, 0)
+shape = SubResource("CylinderShape3D_tap")

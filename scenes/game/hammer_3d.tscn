@@ -1,0 +1,50 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/game/hammer_3d.gd" id="1_hammer_script"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_handle"]
+top_radius = 0.08
+bottom_radius = 0.1
+height = 1.4
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_head"]
+top_radius = 0.34
+bottom_radius = 0.34
+height = 0.85
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_cap"]
+top_radius = 0.36
+bottom_radius = 0.36
+height = 0.08
+
+[sub_resource type="TorusMesh" id="TorusMesh_shockwave"]
+inner_radius = 0.55
+outer_radius = 0.72
+rings = 24
+ring_segments = 12
+
+[node name="Hammer3D" type="Node3D"]
+script = ExtResource("1_hammer_script")
+
+[node name="PivotRoot" type="Node3D" parent="."]
+
+[node name="HandleMesh" type="MeshInstance3D" parent="PivotRoot"]
+transform = Transform3D(0.0871557, -0.996195, 0, 0.996195, 0.0871557, 0, 0, 0, 1, -0.45, 0.25, 0)
+mesh = SubResource("CylinderMesh_handle")
+
+[node name="HeadMesh" type="MeshInstance3D" parent="PivotRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, 0.32, 0)
+mesh = SubResource("CylinderMesh_head")
+
+[node name="CapLeftMesh" type="MeshInstance3D" parent="PivotRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, -0.12, 0)
+mesh = SubResource("CylinderMesh_cap")
+
+[node name="CapRightMesh" type="MeshInstance3D" parent="PivotRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, 0.76, 0)
+mesh = SubResource("CylinderMesh_cap")
+
+[node name="ShockwaveRing" type="MeshInstance3D" parent="."]
+visible = false
+transform = Transform3D(1, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, 0.14, 0)
+mesh = SubResource("TorusMesh_shockwave")

@@ -7,6 +7,7 @@ extends Control
 
 const TITLE_SCENE_PATH: String = "res://scenes/ui/title_screen.tscn"
 const STORE_SCENE_PATH: String = "res://scenes/ui/store_screen.tscn"
+const ARENA_SCENE_PATH: String = "res://scenes/game/arena_2_5d.tscn"
 
 @onready var village_bg_holder: Control = $VillageBackdropHolder
 @onready var top_bar_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/TopStatusBar
@@ -228,10 +229,7 @@ func _on_back_to_title() -> void:
 
 
 func _on_play_pressed() -> void:
-	_active_info_mode = "play"
-	_refresh_info_modal_texts()
-	info_modal_backdrop.visible = true
-	info_reward_btn.grab_focus()
+	get_tree().change_scene_to_file(ARENA_SCENE_PATH)
 
 
 func _on_store_pressed() -> void:
