@@ -39,38 +39,40 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 28
-theme_override_constants/margin_top = 28
-theme_override_constants/margin_right = 28
-theme_override_constants/margin_bottom = 28
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 36
 
 [node name="CenterWrap" type="HBoxContainer" parent="SafeMargin"]
 layout_mode = 2
 alignment = 1
 
 [node name="StoreColumn" type="VBoxContainer" parent="SafeMargin/CenterWrap"]
-custom_minimum_size = Vector2(920, 0)
+custom_minimum_size = Vector2(960, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 16
+theme_override_constants/separation = 20
 
 [node name="StoreHeader" type="PanelContainer" parent="SafeMargin/CenterWrap/StoreColumn"]
+custom_minimum_size = Vector2(0, 118)
 layout_mode = 2
 
 [node name="HeaderHBox" type="HBoxContainer" parent="SafeMargin/CenterWrap/StoreColumn/StoreHeader"]
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 20
 
 [node name="BackHubBtn" type="Button" parent="SafeMargin/CenterWrap/StoreColumn/StoreHeader/HeaderHBox"]
+custom_minimum_size = Vector2(220, 84)
 layout_mode = 2
 size_flags_vertical = 4
-text = "⬅ Volver al Menú"
+text = "⬅ Volver"
 
 [node name="TitleVBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/StoreColumn/StoreHeader/HeaderHBox"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_constants/separation = 2
+theme_override_constants/separation = 4
 
 [node name="StoreTitleLabel" type="Label" parent="SafeMargin/CenterWrap/StoreColumn/StoreHeader/HeaderHBox/TitleVBox"]
 layout_mode = 2
@@ -83,14 +85,14 @@ autowrap_mode = 2
 
 [node name="PointsBalanceLabel" type="Label" parent="SafeMargin/CenterWrap/StoreColumn/StoreHeader/HeaderHBox"]
 layout_mode = 2
-text = "🪙 Puntos: 250"
+text = "🪙 Monedas: 250"
 
 [node name="PatternCard" type="PanelContainer" parent="SafeMargin/CenterWrap/StoreColumn"]
 layout_mode = 2
 
 [node name="PatternVBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/StoreColumn/PatternCard"]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 14
 
 [node name="PatternTitleLabel" type="Label" parent="SafeMargin/CenterWrap/StoreColumn/PatternCard/PatternVBox"]
 layout_mode = 2
@@ -98,7 +100,7 @@ text = "🔨 Patrón de Multimartillo (3 Cabezas):"
 
 [node name="PatternButtonsHBox" type="HBoxContainer" parent="SafeMargin/CenterWrap/StoreColumn/PatternCard/PatternVBox"]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="ToolsScroll" type="ScrollContainer" parent="SafeMargin/CenterWrap/StoreColumn"]
 layout_mode = 2
@@ -109,4 +111,4 @@ horizontal_scroll_mode = 0
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 14
+theme_override_constants/separation = 18

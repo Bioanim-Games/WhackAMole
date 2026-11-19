@@ -4,8 +4,8 @@
 [ext_resource type="Texture2D" path="res://assets/art/topo_hero.jpg" id="2_hero_tex"]
 
 [sub_resource type="Gradient" id="Gradient_vignette"]
-offsets = PackedFloat32Array(0, 0.25, 0.68, 1)
-colors = PackedColorArray(0.06, 0.04, 0.02, 0.82, 0.06, 0.04, 0.02, 0.08, 0.06, 0.04, 0.02, 0.2, 0.05, 0.03, 0.01, 0.9)
+offsets = PackedFloat32Array(0, 0.28, 0.65, 1)
+colors = PackedColorArray(0.06, 0.04, 0.02, 0.85, 0.06, 0.04, 0.02, 0.08, 0.06, 0.04, 0.02, 0.25, 0.05, 0.03, 0.01, 0.92)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_vignette"]
 gradient = SubResource("Gradient_vignette")
@@ -54,7 +54,7 @@ expand_mode = 1
 
 [node name="AmbientMotes" type="CPUParticles2D" parent="."]
 position = Vector2(540, 1750)
-amount = 28
+amount = 32
 lifetime = 6.0
 preprocess = 2.0
 emission_shape = 3
@@ -64,9 +64,9 @@ spread = 25.0
 gravity = Vector2(0, -18)
 initial_velocity_min = 35.0
 initial_velocity_max = 75.0
-scale_amount_min = 3.0
-scale_amount_max = 7.0
-color = Color(1, 0.91, 0.52, 0.45)
+scale_amount_min = 5.0
+scale_amount_max = 10.0
+color = Color(1, 0.91, 0.52, 0.5)
 
 [node name="SafeMargin" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -78,41 +78,34 @@ grow_vertical = 2
 theme_override_constants/margin_left = 36
 theme_override_constants/margin_top = 36
 theme_override_constants/margin_right = 36
-theme_override_constants/margin_bottom = 48
+theme_override_constants/margin_bottom = 52
 
 [node name="CenterWrap" type="HBoxContainer" parent="SafeMargin"]
 layout_mode = 2
 alignment = 1
 
 [node name="CenterColumn" type="VBoxContainer" parent="SafeMargin/CenterWrap"]
-custom_minimum_size = Vector2(760, 0)
+custom_minimum_size = Vector2(920, 0)
 layout_mode = 2
-size_flags_horizontal = 4
+size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 24
+theme_override_constants/separation = 26
 
 [node name="TopBar" type="HBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn"]
 layout_mode = 2
 alignment = 2
 
-[node name="LangBox" type="HBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn/TopBar"]
+[node name="OpenSettingsButton" type="Button" parent="SafeMargin/CenterWrap/CenterColumn/TopBar"]
+custom_minimum_size = Vector2(340, 86)
 layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="LangLabel" type="Label" parent="SafeMargin/CenterWrap/CenterColumn/TopBar/LangBox"]
-layout_mode = 2
-text = "🌐 Idioma:"
-
-[node name="LanguageOptionButton" type="OptionButton" parent="SafeMargin/CenterWrap/CenterColumn/TopBar/LangBox"]
-custom_minimum_size = Vector2(260, 44)
-layout_mode = 2
+text = "⚙️ AJUSTES / 🌐"
 
 [node name="TopTitleBadge" type="PanelContainer" parent="SafeMargin/CenterWrap/CenterColumn"]
 layout_mode = 2
 
 [node name="TitleVBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn/TopTitleBadge"]
 layout_mode = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 10
 
 [node name="MainLogoLabel" type="Label" parent="SafeMargin/CenterWrap/CenterColumn/TopTitleBadge/TitleVBox"]
 layout_mode = 2
@@ -137,10 +130,10 @@ mouse_filter = 2
 
 [node name="BottomActionBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn"]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 18
 
 [node name="TapToStartButton" type="Button" parent="SafeMargin/CenterWrap/CenterColumn/BottomActionBox"]
-custom_minimum_size = Vector2(0, 86)
+custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
 text = "🔨 ¡PRESIONA PARA INICIAR!"
 
@@ -149,3 +142,99 @@ layout_mode = 2
 text = "Toca la pantalla • Haz clic • Presiona [Enter] o Botón (A)"
 horizontal_alignment = 1
 autowrap_mode = 2
+
+[node name="SettingsBackdrop" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.8)
+
+[node name="ModalCenter" type="CenterContainer" parent="SettingsBackdrop"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SettingsModal" type="PanelContainer" parent="SettingsBackdrop/ModalCenter"]
+custom_minimum_size = Vector2(880, 0)
+layout_mode = 2
+
+[node name="SettingsVBox" type="VBoxContainer" parent="SettingsBackdrop/ModalCenter/SettingsModal"]
+layout_mode = 2
+theme_override_constants/separation = 26
+
+[node name="SettingsTitleLabel" type="Label" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox"]
+layout_mode = 2
+text = "⚙️ AJUSTES DEL JUEGO"
+horizontal_alignment = 1
+
+[node name="LangRow" type="VBoxContainer" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LangTitleLabel" type="Label" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/LangRow"]
+layout_mode = 2
+text = "🌐 Idioma:"
+
+[node name="LanguageOptionButton" type="OptionButton" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/LangRow"]
+custom_minimum_size = Vector2(0, 86)
+layout_mode = 2
+
+[node name="MusicRow" type="VBoxContainer" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MusicHeaderHBox" type="HBoxContainer" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/MusicRow"]
+layout_mode = 2
+
+[node name="MusicLabel" type="Label" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/MusicRow/MusicHeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🎵 Música"
+
+[node name="MusicToggleBtn" type="Button" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/MusicRow/MusicHeaderHBox"]
+custom_minimum_size = Vector2(240, 80)
+layout_mode = 2
+text = "✓ ENCENDIDO"
+
+[node name="MusicSlider" type="HSlider" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/MusicRow"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+max_value = 100.0
+step = 5.0
+value = 80.0
+
+[node name="SfxRow" type="VBoxContainer" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="SfxHeaderHBox" type="HBoxContainer" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/SfxRow"]
+layout_mode = 2
+
+[node name="SfxLabel" type="Label" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/SfxRow/SfxHeaderHBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "🔊 Efectos de Sonido"
+
+[node name="SfxToggleBtn" type="Button" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/SfxRow/SfxHeaderHBox"]
+custom_minimum_size = Vector2(240, 80)
+layout_mode = 2
+text = "✓ ENCENDIDO"
+
+[node name="SfxSlider" type="HSlider" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/SfxRow"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+max_value = 100.0
+step = 5.0
+value = 90.0
+
+[node name="CloseSettingsButton" type="Button" parent="SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox"]
+custom_minimum_size = Vector2(0, 104)
+layout_mode = 2
+text = "✖ CERRAR"

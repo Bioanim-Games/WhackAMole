@@ -1,115 +1,137 @@
 extends Control
 
-## Main Hub Screen displaying Player Rank, Points, PvZ-style 1-to-3 Lane Lawn
-## progression, the 5 Mole types (+1, +2, +3, +4 unlock schedule), Play & Store
-## navigation, and an interactive progression simulator.
+## Friendly Village Main Hub featuring a sunny procedural Village background,
+## simple Top Bar with Points (🏆) & Coins (🪙), and 4 big, easy-to-read buttons:
+## PLAY, STORE, PROFILE/SCORES, and SETTINGS (Language, Music, SFX).
+## Zero enemy spoilers on the Hub.
 
 const TITLE_SCENE_PATH: String = "res://scenes/ui/title_screen.tscn"
 const STORE_SCENE_PATH: String = "res://scenes/ui/store_screen.tscn"
 
+@onready var village_bg_holder: Control = $VillageBackdropHolder
 @onready var top_bar_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/TopStatusBar
 @onready var back_title_btn: Button = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/BackToTitleBtn
-@onready var rank_label: Label = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/RankBadge
-@onready var points_label: Label = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/PointsBadge
-@onready var matches_label: Label = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/MatchesBadge
-@onready var lang_option: OptionButton = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/LanguageOptionButton
+@onready var points_badge_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/PointsBadgePanel
+@onready var points_label: Label = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/PointsBadgePanel/PointsBadge
+@onready var coins_badge_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/CoinsBadgePanel
+@onready var coins_label: Label = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/CoinsBadgePanel/CoinsBadge
 
-@onready var progression_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/ProgressionCard
-@onready var progression_title_lbl: Label = $SafeMargin/CenterWrap/MainColumn/ProgressionCard/ProgVBox/ProgressionTitle
-@onready var lawn_status_lbl: Label = $SafeMargin/CenterWrap/MainColumn/ProgressionCard/ProgVBox/LawnStatusLabel
-@onready var lanes_container: VBoxContainer = $SafeMargin/CenterWrap/MainColumn/ProgressionCard/ProgVBox/PvZLanesBox
-@onready var moles_row: HBoxContainer = $SafeMargin/CenterWrap/MainColumn/ProgressionCard/ProgVBox/MoleRosterScroll/MoleRosterRow
-@onready var next_unlock_lbl: Label = $SafeMargin/CenterWrap/MainColumn/ProgressionCard/ProgVBox/NextUnlockLabel
+@onready var village_sign_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/VillageSignBanner
+@onready var village_title_lbl: Label = $SafeMargin/CenterWrap/MainColumn/VillageSignBanner/VillageTitleLabel
 
-@onready var difficulty_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/DifficultyCard
-@onready var diff_title_lbl: Label = $SafeMargin/CenterWrap/MainColumn/DifficultyCard/DiffVBox/DiffTitleLabel
-@onready var diff_info_lbl: Label = $SafeMargin/CenterWrap/MainColumn/DifficultyCard/DiffVBox/DiffInfoLabel
-@onready var diff_note_lbl: Label = $SafeMargin/CenterWrap/MainColumn/DifficultyCard/DiffVBox/DiffNoteLabel
+@onready var play_btn: Button = $SafeMargin/CenterWrap/MainColumn/MenuButtonsBox/PlayMatchButton
+@onready var store_btn: Button = $SafeMargin/CenterWrap/MainColumn/MenuButtonsBox/OpenStoreButton
+@onready var profile_btn: Button = $SafeMargin/CenterWrap/MainColumn/MenuButtonsBox/OpenProfileButton
+@onready var settings_btn: Button = $SafeMargin/CenterWrap/MainColumn/MenuButtonsBox/OpenSettingsButton
 
-@onready var play_btn: Button = $SafeMargin/CenterWrap/MainColumn/ActionsBox/PlayMatchButton
-@onready var store_btn: Button = $SafeMargin/CenterWrap/MainColumn/ActionsBox/OpenStoreButton
+@onready var info_modal_backdrop: ColorRect = $InfoModalBackdrop
+@onready var info_modal_card: PanelContainer = $InfoModalBackdrop/ModalCenter/InfoModalCard
+@onready var info_title_lbl: Label = $InfoModalBackdrop/ModalCenter/InfoModalCard/ModalVBox/InfoTitleLabel
+@onready var info_desc_lbl: Label = $InfoModalBackdrop/ModalCenter/InfoModalCard/ModalVBox/InfoDescLabel
+@onready var info_reward_btn: Button = $InfoModalBackdrop/ModalCenter/InfoModalCard/ModalVBox/InfoRewardBtn
+@onready var info_close_btn: Button = $InfoModalBackdrop/ModalCenter/InfoModalCard/ModalVBox/InfoCloseBtn
 
-@onready var sim_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/SimTestBar
-@onready var sim_title_lbl: Label = $SafeMargin/CenterWrap/MainColumn/SimTestBar/SimHBox/SimTitleLabel
-@onready var sim_win_btn: Button = $SafeMargin/CenterWrap/MainColumn/SimTestBar/SimHBox/SimWinButton
-@onready var sim_reset_btn: Button = $SafeMargin/CenterWrap/MainColumn/SimTestBar/SimHBox/SimResetButton
+@onready var settings_backdrop: ColorRect = $SettingsBackdrop
+@onready var settings_modal: PanelContainer = $SettingsBackdrop/ModalCenter/SettingsModal
+@onready var settings_title_lbl: Label = $SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/SettingsTitleLabel
+@onready var lang_title_lbl: Label = $SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/LangRow/LangTitleLabel
+@onready var lang_option: OptionButton = $SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/LangRow/LanguageOptionButton
+@onready var music_label: Label = $SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/MusicRow/MusicHeaderHBox/MusicLabel
+@onready var music_toggle_btn: Button = $SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/MusicRow/MusicHeaderHBox/MusicToggleBtn
+@onready var music_slider: HSlider = $SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/MusicRow/MusicSlider
+@onready var sfx_label: Label = $SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/SfxRow/SfxHeaderHBox/SfxLabel
+@onready var sfx_toggle_btn: Button = $SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/SfxRow/SfxHeaderHBox/SfxToggleBtn
+@onready var sfx_slider: HSlider = $SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/SfxRow/SfxSlider
+@onready var close_settings_btn: Button = $SettingsBackdrop/ModalCenter/SettingsModal/SettingsVBox/CloseSettingsButton
 
-@onready var preview_modal_backdrop: ColorRect = $StagePreviewBackdrop
-@onready var preview_modal_card: PanelContainer = $StagePreviewBackdrop/ModalCenter/StagePreviewModal
-@onready var modal_title_lbl: Label = $StagePreviewBackdrop/ModalCenter/StagePreviewModal/ModalVBox/ModalTitleLabel
-@onready var modal_desc_lbl: Label = $StagePreviewBackdrop/ModalCenter/StagePreviewModal/ModalVBox/ModalDescLabel
-@onready var modal_sim_win_btn: Button = $StagePreviewBackdrop/ModalCenter/StagePreviewModal/ModalVBox/ModalButtonsHBox/ModalSimVictoryBtn
-@onready var modal_close_btn: Button = $StagePreviewBackdrop/ModalCenter/StagePreviewModal/ModalVBox/ModalButtonsHBox/ModalCloseBtn
+var _active_info_mode: String = "play"
 
 
 func _ready() -> void:
+	_build_village_scene()
 	_apply_styles()
 	_populate_language_selector()
+	_sync_audio_controls()
 	_refresh_all()
 
 	LocalizationManager.language_changed.connect(_on_language_changed)
-	GameManager.state_changed.connect(_refresh_all)
+	GameManager.state_changed.connect(_on_state_changed)
 
 	back_title_btn.pressed.connect(_on_back_to_title)
-	lang_option.item_selected.connect(_on_language_selected)
 	play_btn.pressed.connect(_on_play_pressed)
 	store_btn.pressed.connect(_on_store_pressed)
-	sim_win_btn.pressed.connect(_on_sim_win_pressed)
-	sim_reset_btn.pressed.connect(_on_sim_reset_pressed)
-	modal_sim_win_btn.pressed.connect(_on_modal_sim_win_pressed)
-	modal_close_btn.pressed.connect(_on_modal_close_pressed)
+	profile_btn.pressed.connect(_on_profile_pressed)
+	settings_btn.pressed.connect(_on_settings_pressed)
+
+	info_reward_btn.pressed.connect(_on_info_reward_pressed)
+	info_close_btn.pressed.connect(_on_info_close_pressed)
+
+	close_settings_btn.pressed.connect(_on_close_settings_pressed)
+	lang_option.item_selected.connect(_on_language_selected)
+	music_toggle_btn.pressed.connect(_on_music_toggle_pressed)
+	music_slider.value_changed.connect(_on_music_slider_changed)
+	sfx_toggle_btn.pressed.connect(_on_sfx_toggle_pressed)
+	sfx_slider.value_changed.connect(_on_sfx_slider_changed)
 
 	play_btn.grab_focus()
+
+
+func _build_village_scene() -> void:
+	var village_control: Control = UIThemeBuilder.build_village_background()
+	village_bg_holder.add_child(village_control)
 
 
 func _apply_styles() -> void:
 	top_bar_panel.add_theme_stylebox_override(
 		"panel",
-		UIThemeBuilder.make_panel_style(Color(0.12, 0.08, 0.05, 0.94), Color("#D49B35"), 18, 3, 14)
+		UIThemeBuilder.make_panel_style(Color(0.14, 0.09, 0.05, 0.92), Color("#D49B35"), 26, 4, 16)
 	)
-	progression_panel.add_theme_stylebox_override(
+	points_badge_panel.add_theme_stylebox_override(
 		"panel",
-		UIThemeBuilder.make_panel_style(Color(0.11, 0.08, 0.05, 0.92), Color("#58D68D"), 22, 3, 18)
+		UIThemeBuilder.make_panel_style(Color(0.20, 0.13, 0.07, 0.96), Color("#5DADE2"), 22, 3, 14)
 	)
-	difficulty_panel.add_theme_stylebox_override(
+	coins_badge_panel.add_theme_stylebox_override(
 		"panel",
-		UIThemeBuilder.make_panel_style(Color(0.14, 0.09, 0.06, 0.92), Color("#F39C12"), 20, 3, 16)
+		UIThemeBuilder.make_panel_style(Color(0.20, 0.13, 0.07, 0.96), Color("#FFB800"), 22, 3, 14)
 	)
-	sim_panel.add_theme_stylebox_override(
+	village_sign_panel.add_theme_stylebox_override(
 		"panel",
-		UIThemeBuilder.make_panel_style(Color(0.1, 0.12, 0.16, 0.92), Color("#5DADE2"), 16, 2, 12)
+		UIThemeBuilder.make_panel_style(Color("#5D3A1A"), Color("#FFB800"), 28, 5, 22)
 	)
-	preview_modal_card.add_theme_stylebox_override(
+	info_modal_card.add_theme_stylebox_override(
 		"panel",
-		UIThemeBuilder.make_panel_style(Color(0.11, 0.07, 0.04, 0.98), Color("#FFB800"), 24, 4, 24)
+		UIThemeBuilder.make_panel_style(Color(0.12, 0.08, 0.05, 0.98), Color("#FFB800"), 30, 5, 32)
+	)
+	settings_modal.add_theme_stylebox_override(
+		"panel",
+		UIThemeBuilder.make_panel_style(Color(0.12, 0.08, 0.05, 0.98), Color("#FFB800"), 30, 5, 32)
 	)
 
-	rank_label.label_settings = UIThemeBuilder.make_label_settings(19, Color("#FFE066"), 5)
-	points_label.label_settings = UIThemeBuilder.make_label_settings(19, Color("#58D68D"), 5)
-	matches_label.label_settings = UIThemeBuilder.make_label_settings(18, Color("#D6EAF8"), 5)
+	points_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#AED6F1"), 8)
+	coins_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#FFE066"), 8)
+	village_title_lbl.label_settings = UIThemeBuilder.make_label_settings(46, Color("#FFF3C4"), 10, Color("#241205"), Vector2(0, 5))
 
-	progression_title_lbl.label_settings = UIThemeBuilder.make_label_settings(22, Color("#58D68D"), 6)
-	lawn_status_lbl.label_settings = UIThemeBuilder.make_label_settings(17, Color("#FFF3C4"), 5)
-	next_unlock_lbl.label_settings = UIThemeBuilder.make_label_settings(17, Color("#FFB800"), 5)
+	info_title_lbl.label_settings = UIThemeBuilder.make_label_settings(44, Color("#FFE047"), 10)
+	info_desc_lbl.label_settings = UIThemeBuilder.make_label_settings(32, Color("#FFF7E6"), 7)
 
-	diff_title_lbl.label_settings = UIThemeBuilder.make_label_settings(20, Color("#FFB800"), 6)
-	diff_info_lbl.label_settings = UIThemeBuilder.make_label_settings(17, Color("#FFFFFF"), 5)
-	diff_note_lbl.label_settings = UIThemeBuilder.make_label_settings(15, Color("#E5D4B8"), 4)
+	settings_title_lbl.label_settings = UIThemeBuilder.make_label_settings(46, Color("#FFE047"), 10)
+	lang_title_lbl.label_settings = UIThemeBuilder.make_label_settings(34, Color("#FFF3C4"), 7)
+	music_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#58D68D"), 7)
+	sfx_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#5DADE2"), 7)
 
-	sim_title_lbl.label_settings = UIThemeBuilder.make_label_settings(15, Color("#AED6F1"), 4)
-	modal_title_lbl.label_settings = UIThemeBuilder.make_label_settings(26, Color("#FFE047"), 8)
-	modal_desc_lbl.label_settings = UIThemeBuilder.make_label_settings(18, Color("#FFF7E6"), 5)
+	UIThemeBuilder.apply_arcade_button_style(back_title_btn, Color("#6E4726"), Color("#422813"), Color.WHITE, 32, 20, 8)
+	UIThemeBuilder.apply_arcade_button_style(play_btn, Color("#FFB800"), Color("#B86B00"), Color("#FFFDF5"), 52, 30, 12)
+	UIThemeBuilder.apply_arcade_button_style(store_btn, Color("#27AE60"), Color("#196F3D"), Color.WHITE, 44, 28, 10)
+	UIThemeBuilder.apply_arcade_button_style(profile_btn, Color("#2980B9"), Color("#1B4F72"), Color.WHITE, 40, 26, 10)
+	UIThemeBuilder.apply_arcade_button_style(settings_btn, Color("#5D6D7E"), Color("#34495E"), Color.WHITE, 40, 26, 10)
 
-	UIThemeBuilder.apply_arcade_button_style(back_title_btn, Color("#5D4037"), Color("#3E2723"), Color.WHITE, 16, 14)
-	UIThemeBuilder.apply_arcade_button_style(play_btn, Color("#FFB800"), Color("#B86B00"), Color("#FFFDF5"), 26, 22)
-	UIThemeBuilder.apply_arcade_button_style(store_btn, Color("#27AE60"), Color("#196F3D"), Color.WHITE, 22, 20)
-	UIThemeBuilder.apply_arcade_button_style(sim_win_btn, Color("#2980B9"), Color("#1B4F72"), Color.WHITE, 15, 12)
-	UIThemeBuilder.apply_arcade_button_style(sim_reset_btn, Color("#7F8C8D"), Color("#4D5656"), Color.WHITE, 15, 12)
-	UIThemeBuilder.apply_arcade_button_style(modal_sim_win_btn, Color("#27AE60"), Color("#196F3D"), Color.WHITE, 20, 16)
-	UIThemeBuilder.apply_arcade_button_style(modal_close_btn, Color("#C0392B"), Color("#7B241C"), Color.WHITE, 18, 16)
+	UIThemeBuilder.apply_arcade_button_style(info_reward_btn, Color("#27AE60"), Color("#196F3D"), Color.WHITE, 34, 22, 9)
+	UIThemeBuilder.apply_arcade_button_style(info_close_btn, Color("#E74C3C"), Color("#922B21"), Color.WHITE, 36, 22, 9)
+	UIThemeBuilder.apply_arcade_button_style(close_settings_btn, Color("#E74C3C"), Color("#922B21"), Color.WHITE, 38, 24, 10)
 
-	lang_option.add_theme_font_override("font", UIThemeBuilder.get_ui_font())
-	lang_option.add_theme_font_size_override("font_size", 15)
+	UIThemeBuilder.style_option_button(lang_option, 34)
+	UIThemeBuilder.style_slider(music_slider)
+	UIThemeBuilder.style_slider(sfx_slider)
 
 
 func _populate_language_selector() -> void:
@@ -120,218 +142,128 @@ func _populate_language_selector() -> void:
 	lang_option.select(LocalizationManager.get_current_locale_index())
 
 
+func _sync_audio_controls() -> void:
+	music_slider.set_value_no_signal(GameManager.music_volume * 100.0)
+	sfx_slider.set_value_no_signal(GameManager.sfx_volume * 100.0)
+	_refresh_audio_toggle_buttons()
+
+
+func _refresh_audio_toggle_buttons() -> void:
+	var m_on: bool = GameManager.music_enabled
+	music_toggle_btn.text = (
+		"✓ " + LocalizationManager.t("LBL_ON")
+		if m_on
+		else "✖ " + LocalizationManager.t("LBL_OFF")
+	)
+	UIThemeBuilder.apply_arcade_button_style(
+		music_toggle_btn,
+		Color("#27AE60") if m_on else Color("#7F8C8D"),
+		Color("#196F3D") if m_on else Color("#4D5656"),
+		Color.WHITE,
+		30,
+		18,
+		7
+	)
+
+	var s_on: bool = GameManager.sfx_enabled
+	sfx_toggle_btn.text = (
+		"✓ " + LocalizationManager.t("LBL_ON")
+		if s_on
+		else "✖ " + LocalizationManager.t("LBL_OFF")
+	)
+	UIThemeBuilder.apply_arcade_button_style(
+		sfx_toggle_btn,
+		Color("#2980B9") if s_on else Color("#7F8C8D"),
+		Color("#1B4F72") if s_on else Color("#4D5656"),
+		Color.WHITE,
+		30,
+		18,
+		7
+	)
+
+
 func _refresh_all() -> void:
-	var stage_num: int = GameManager.get_current_stage_number()
-	var exposure_sec: float = GameManager.get_current_mole_exposure_seconds()
-	var active_holes: int = GameManager.get_active_holes_count()
-	var unlocked_lanes: int = GameManager.get_unlocked_lanes_count()
-	var tool_name: String = GameManager.get_equipped_tool_display_name()
-
 	back_title_btn.text = LocalizationManager.t("BTN_BACK_TITLE")
-	rank_label.text = "⭐ %s: %d" % [LocalizationManager.t("LBL_RANK"), GameManager.player_rank]
-	points_label.text = "🪙 %s: %d" % [LocalizationManager.t("LBL_POINTS"), GameManager.total_points]
-	matches_label.text = "🎮 %s: %d" % [LocalizationManager.t("LBL_MATCHES"), GameManager.matches_completed]
+	points_label.text = "🏆 %s: %d" % [LocalizationManager.t("LBL_POINTS"), GameManager.total_points]
+	coins_label.text = "🪙 %s: %d" % [LocalizationManager.t("LBL_COINS"), GameManager.total_coins]
 
-	progression_title_lbl.text = LocalizationManager.t("HUB_PROGRESSION_TITLE")
-	if unlocked_lanes == 1:
-		lawn_status_lbl.text = LocalizationManager.t("HUB_LAWN_STATUS_1")
-	elif unlocked_lanes == 2:
-		lawn_status_lbl.text = LocalizationManager.t("HUB_LAWN_STATUS_2")
+	village_title_lbl.text = LocalizationManager.t("HUB_VILLAGE_TITLE")
+	play_btn.text = LocalizationManager.t("BTN_HUB_PLAY")
+	store_btn.text = LocalizationManager.t("BTN_HUB_STORE")
+	profile_btn.text = LocalizationManager.t("BTN_HUB_PROFILE")
+	settings_btn.text = LocalizationManager.t("BTN_HUB_SETTINGS")
+
+	settings_title_lbl.text = LocalizationManager.t("SETTINGS_TITLE")
+	lang_title_lbl.text = "🌐 " + LocalizationManager.t("LBL_LANGUAGE") + ":"
+	music_label.text = LocalizationManager.t("LBL_MUSIC")
+	sfx_label.text = LocalizationManager.t("LBL_SFX")
+	close_settings_btn.text = LocalizationManager.t("BTN_CLOSE")
+	_refresh_audio_toggle_buttons()
+	_refresh_info_modal_texts()
+
+
+func _refresh_info_modal_texts() -> void:
+	info_close_btn.text = LocalizationManager.t("BTN_CLOSE")
+	if _active_info_mode == "play":
+		var stage_num: int = GameManager.get_current_stage_number()
+		info_title_lbl.text = LocalizationManager.t("PLAY_READY_TITLE", {"level": stage_num})
+		info_desc_lbl.text = LocalizationManager.t("PLAY_READY_DESC")
+		info_reward_btn.visible = true
+		info_reward_btn.text = LocalizationManager.t("BTN_SIM_WIN_REWARD")
 	else:
-		lawn_status_lbl.text = LocalizationManager.t("HUB_LAWN_STATUS_3")
-
-	_rebuild_pvz_lanes_visualizer()
-	_rebuild_mole_roster_cards(exposure_sec)
-
-	var next_info: Dictionary = GameManager.get_next_locked_mole_info()
-	if next_info.is_empty():
-		next_unlock_lbl.text = LocalizationManager.t("HUB_ALL_MOLES_UNLOCKED")
-	else:
-		var mole_def: Dictionary = next_info["mole"]
-		var mole_name: String = LocalizationManager.t(String(mole_def["name_key"]))
-		next_unlock_lbl.text = LocalizationManager.t(
-			"HUB_NEXT_MOLE_IN",
-			{"mole": mole_name, "count": int(next_info["matches_remaining"])}
+		info_title_lbl.text = LocalizationManager.t("PROFILE_SOON_TITLE")
+		info_desc_lbl.text = LocalizationManager.t(
+			"PROFILE_SOON_DESC",
+			{
+				"points": GameManager.total_points,
+				"coins": GameManager.total_coins,
+				"rank": GameManager.player_rank,
+			}
 		)
-
-	diff_title_lbl.text = LocalizationManager.t("HUB_DIFFICULTY_CARD_TITLE")
-	diff_info_lbl.text = LocalizationManager.t(
-		"HUB_DIFFICULTY_INFO",
-		{
-			"time": "%.1f" % exposure_sec,
-			"holes": active_holes,
-			"tool": tool_name,
-		}
-	)
-	diff_note_lbl.text = LocalizationManager.t(
-		"HUB_INTRO_NOTE",
-		{"time": "%.1f" % exposure_sec}
-	)
-
-	play_btn.text = LocalizationManager.t("BTN_PLAY_MATCH", {"level": stage_num})
-	store_btn.text = LocalizationManager.t("BTN_OPEN_STORE")
-
-	sim_title_lbl.text = LocalizationManager.t("SIM_BAR_TITLE")
-	sim_win_btn.text = LocalizationManager.t("BTN_SIM_WIN")
-	sim_reset_btn.text = LocalizationManager.t("BTN_SIM_RESET")
-
-	# Refresh modal text as well
-	var featured_mole: Dictionary = GameManager.get_featured_mole_for_current_stage()
-	var featured_name: String = LocalizationManager.t(String(featured_mole["name_key"]))
-	modal_title_lbl.text = LocalizationManager.t("MODAL_READY_TITLE", {"level": stage_num})
-	modal_desc_lbl.text = LocalizationManager.t(
-		"MODAL_READY_DESC",
-		{
-			"lanes": unlocked_lanes,
-			"holes": active_holes,
-			"featured_mole": featured_name,
-			"time": "%.1f" % exposure_sec,
-			"tool": tool_name,
-		}
-	)
-	modal_sim_win_btn.text = LocalizationManager.t("BTN_MODAL_SIM_VICTORY")
-	modal_close_btn.text = LocalizationManager.t("BTN_MODAL_CLOSE")
+		info_reward_btn.visible = false
 
 
-## Renders the Plants vs. Zombies style 3-row lawn matrix showing unlocked rows
-## (with 3 dirt holes each) vs locked uncut-turf rows.
-func _rebuild_pvz_lanes_visualizer() -> void:
-	for child: Node in lanes_container.get_children():
-		child.queue_free()
-
-	var row_flags: Array[bool] = GameManager.get_active_lane_rows()
-	for row_idx: int in range(3):
-		var is_active: bool = row_flags[row_idx]
-		var lane_panel := PanelContainer.new()
-		lane_panel.custom_minimum_size = Vector2(0, 46)
-		var sb := StyleBoxFlat.new()
-		if is_active:
-			sb.bg_color = Color("#1E6B38")
-			sb.border_color = Color("#58D68D")
-		else:
-			sb.bg_color = Color(0.11, 0.16, 0.12, 0.78)
-			sb.border_color = Color("#34495E")
-		sb.set_border_width_all(2)
-		sb.set_corner_radius_all(12)
-		sb.content_margin_left = 14
-		sb.content_margin_right = 14
-		sb.content_margin_top = 6
-		sb.content_margin_bottom = 6
-		lane_panel.add_theme_stylebox_override("panel", sb)
-
-		var hbox := HBoxContainer.new()
-		hbox.add_theme_constant_override("separation", 12)
-		lane_panel.add_child(hbox)
-
-		var status_lbl := Label.new()
-		status_lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		status_lbl.text = (
-			"🌱 #%d — %s" % [row_idx + 1, LocalizationManager.t("HUB_LANE_ACTIVE")]
-			if is_active
-			else "🔒 #%d — %s" % [row_idx + 1, LocalizationManager.t("HUB_LANE_LOCKED")]
-		)
-		status_lbl.label_settings = UIThemeBuilder.make_label_settings(
-			15,
-			Color("#EAFAF1") if is_active else Color("#95A5A6"),
-			4
-		)
-		hbox.add_child(status_lbl)
-
-		var holes_hbox := HBoxContainer.new()
-		holes_hbox.add_theme_constant_override("separation", 14)
-		for col_idx: int in range(3):
-			var hole_dot := Panel.new()
-			hole_dot.custom_minimum_size = Vector2(44, 24)
-			var h_sb := StyleBoxFlat.new()
-			if is_active:
-				h_sb.bg_color = Color("#3B2314")
-				h_sb.border_color = Color("#C4946E")
-			else:
-				h_sb.bg_color = Color("#1C2820")
-				h_sb.border_color = Color("#2E4034")
-			h_sb.set_border_width_all(2)
-			h_sb.set_corner_radius_all(12)
-			hole_dot.add_theme_stylebox_override("panel", h_sb)
-			holes_hbox.add_child(hole_dot)
-		hbox.add_child(holes_hbox)
-
-		lanes_container.add_child(lane_panel)
+func _on_back_to_title() -> void:
+	get_tree().change_scene_to_file(TITLE_SCENE_PATH)
 
 
-## Builds the 5 Mole Progression Cards (+1, +2, +3, +4 triangular unlock schedule).
-func _rebuild_mole_roster_cards(exposure_sec: float) -> void:
-	for child: Node in moles_row.get_children():
-		child.queue_free()
+func _on_play_pressed() -> void:
+	_active_info_mode = "play"
+	_refresh_info_modal_texts()
+	info_modal_backdrop.visible = true
+	info_reward_btn.grab_focus()
 
-	for mole_def: Dictionary in GameManager.MOLE_DEFINITIONS:
-		var mole_id: String = String(mole_def["id"])
-		var unlocked: bool = GameManager.is_mole_unlocked(mole_id)
-		var accent: Color = mole_def["accent_color"]
 
-		var card := PanelContainer.new()
-		card.custom_minimum_size = Vector2(215, 195)
-		card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		var card_sb := UIThemeBuilder.make_panel_style(
-			Color(0.16, 0.11, 0.07, 0.95) if unlocked else Color(0.1, 0.09, 0.09, 0.85),
-			accent if unlocked else Color("#4A443F"),
-			16,
-			3,
-			12
-		)
-		card.add_theme_stylebox_override("panel", card_sb)
+func _on_store_pressed() -> void:
+	get_tree().change_scene_to_file(STORE_SCENE_PATH)
 
-		var vbox := VBoxContainer.new()
-		vbox.add_theme_constant_override("separation", 6)
-		card.add_child(vbox)
 
-		var top_row := HBoxContainer.new()
-		top_row.add_theme_constant_override("separation", 10)
-		vbox.add_child(top_row)
+func _on_profile_pressed() -> void:
+	_active_info_mode = "profile"
+	_refresh_info_modal_texts()
+	info_modal_backdrop.visible = true
+	info_close_btn.grab_focus()
 
-		var avatar: Control = UIThemeBuilder.build_mole_avatar_icon(mole_id, unlocked)
-		top_row.add_child(avatar)
 
-		var title_col := VBoxContainer.new()
-		title_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		top_row.add_child(title_col)
+func _on_settings_pressed() -> void:
+	settings_backdrop.visible = true
+	close_settings_btn.grab_focus()
 
-		var name_lbl := Label.new()
-		name_lbl.text = LocalizationManager.t(String(mole_def["name_key"]))
-		name_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		name_lbl.label_settings = UIThemeBuilder.make_label_settings(
-			16,
-			accent.lightened(0.25) if unlocked else Color("#95A5A6"),
-			4
-		)
-		title_col.add_child(name_lbl)
 
-		var badge_lbl := Label.new()
-		if unlocked:
-			badge_lbl.text = "✓ " + LocalizationManager.t("MOLE_UNLOCKED")
-			badge_lbl.label_settings = UIThemeBuilder.make_label_settings(13, Color("#58D68D"), 3)
-		else:
-			badge_lbl.text = "🔒 " + LocalizationManager.t(
-				"MOLE_LOCKED_GAMES",
-				{"game": int(mole_def["first_game_number"])}
-			)
-			badge_lbl.label_settings = UIThemeBuilder.make_label_settings(13, Color("#F39C12"), 3)
-		title_col.add_child(badge_lbl)
+func _on_info_reward_pressed() -> void:
+	GameManager.record_match_completed(100, 150)
+	info_modal_backdrop.visible = false
+	play_btn.grab_focus()
 
-		var desc_lbl := Label.new()
-		desc_lbl.text = LocalizationManager.t(
-			String(mole_def["desc_key"]),
-			{"time": "%.1f" % exposure_sec}
-		)
-		desc_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		desc_lbl.size_flags_vertical = Control.SIZE_EXPAND_FILL
-		desc_lbl.label_settings = UIThemeBuilder.make_label_settings(
-			13,
-			Color("#F5E6D3") if unlocked else Color("#7F8C8D"),
-			3
-		)
-		vbox.add_child(desc_lbl)
 
-		moles_row.add_child(card)
+func _on_info_close_pressed() -> void:
+	info_modal_backdrop.visible = false
+	play_btn.grab_focus()
+
+
+func _on_close_settings_pressed() -> void:
+	settings_backdrop.visible = false
+	settings_btn.grab_focus()
 
 
 func _on_language_selected(index: int) -> void:
@@ -345,33 +277,22 @@ func _on_language_changed(_new_locale: String) -> void:
 	_refresh_all()
 
 
-func _on_back_to_title() -> void:
-	get_tree().change_scene_to_file(TITLE_SCENE_PATH)
+func _on_state_changed() -> void:
+	_sync_audio_controls()
+	_refresh_all()
 
 
-func _on_play_pressed() -> void:
-	preview_modal_backdrop.visible = true
-	modal_sim_win_btn.grab_focus()
+func _on_music_toggle_pressed() -> void:
+	GameManager.set_music_enabled(not GameManager.music_enabled)
 
 
-func _on_store_pressed() -> void:
-	get_tree().change_scene_to_file(STORE_SCENE_PATH)
+func _on_music_slider_changed(val: float) -> void:
+	GameManager.set_music_volume(val / 100.0)
 
 
-func _on_sim_win_pressed() -> void:
-	GameManager.record_match_completed(150)
+func _on_sfx_toggle_pressed() -> void:
+	GameManager.set_sfx_enabled(not GameManager.sfx_enabled)
 
 
-func _on_sim_reset_pressed() -> void:
-	GameManager.reset_progress()
-
-
-func _on_modal_sim_win_pressed() -> void:
-	GameManager.record_match_completed(150)
-	preview_modal_backdrop.visible = false
-	play_btn.grab_focus()
-
-
-func _on_modal_close_pressed() -> void:
-	preview_modal_backdrop.visible = false
-	play_btn.grab_focus()
+func _on_sfx_slider_changed(val: float) -> void:
+	GameManager.set_sfx_volume(val / 100.0)
