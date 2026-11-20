@@ -1,20 +1,20 @@
 extends Control
 
-## Title Screen featuring topo_hero.jpg, enlarged 92px/46px typography,
-## giant 160px tall Start button, and a big-text Settings Modal (Language, Music, SFX).
+## Redesigned Title Screen featuring res://assets/art/title_screen.jpg with the
+## custom illustrated "Topo Smash" logo, a carved-timber & molten-amber subtitle
+## plaque ("CAOS CON CASCO" / GAME_TITLE_SUB) nestled right beneath the painted logo,
+## a matching 3D molten-amber & dark-timber Start button ("¡JUGAR!"), and 9-language Settings Modal.
 
 const MAIN_HUB_SCENE_PATH: String = "res://scenes/ui/main_hub.tscn"
-const HERO_ART_PATH: String = "res://assets/art/topo_hero.jpg"
+const HERO_ART_PATH: String = "res://assets/art/title_screen.jpg"
+const FALLBACK_HERO_ART_PATH: String = "res://assets/art/topo_hero.jpg"
 
 @onready var safe_margin: MarginContainer = $SafeMargin
 @onready var hero_art: TextureRect = $BackgroundHolder/HeroArt
 @onready var open_settings_btn: Button = $SafeMargin/CenterWrap/CenterColumn/TopBar/OpenSettingsButton
-@onready var top_title_badge: PanelContainer = $SafeMargin/CenterWrap/CenterColumn/TopTitleBadge
-@onready var main_logo_label: Label = $SafeMargin/CenterWrap/CenterColumn/TopTitleBadge/TitleVBox/MainLogoLabel
-@onready var sub_logo_label: Label = $SafeMargin/CenterWrap/CenterColumn/TopTitleBadge/TitleVBox/SubLogoLabel
-@onready var tagline_label: Label = $SafeMargin/CenterWrap/CenterColumn/TopTitleBadge/TitleVBox/TaglineLabel
-@onready var start_button: Button = $SafeMargin/CenterWrap/CenterColumn/BottomActionBox/TapToStartButton
-@onready var hint_label: Label = $SafeMargin/CenterWrap/CenterColumn/BottomActionBox/PlatformHintLabel
+@onready var subtitle_plaque: PanelContainer = $SafeMargin/CenterWrap/CenterColumn/SubtitleCenterRow/SubtitlePlaque
+@onready var sub_logo_label: Label = $SafeMargin/CenterWrap/CenterColumn/SubtitleCenterRow/SubtitlePlaque/SubLogoLabel
+@onready var start_button: Button = $SafeMargin/CenterWrap/CenterColumn/BottomActionBox/StartButtonRow/TapToStartButton
 
 @onready var settings_backdrop: ColorRect = $SettingsBackdrop
 @onready var settings_modal: PanelContainer = $SettingsBackdrop/ModalCenter/SettingsModal
@@ -33,13 +33,16 @@ const HERO_ART_PATH: String = "res://assets/art/topo_hero.jpg"
 func _ready() -> void:
 	if ResourceLoader.exists(HERO_ART_PATH):
 		hero_art.texture = ResourceLoader.load(HERO_ART_PATH) as Texture2D
+	elif ResourceLoader.exists(FALLBACK_HERO_ART_PATH):
+		hero_art.texture = ResourceLoader.load(FALLBACK_HERO_ART_PATH) as Texture2D
+
 	_apply_safe_area()
 	get_viewport().size_changed.connect(_apply_safe_area)
 	_apply_procedural_theme()
 	_populate_language_selector()
 	_sync_audio_controls()
 	_refresh_localized_texts()
-	_start_ambient_animations()
+	_start_button_pulse()
 
 	LocalizationManager.language_changed.connect(_on_language_changed)
 	GameManager.state_changed.connect(_on_state_changed)
@@ -57,56 +60,61 @@ func _ready() -> void:
 
 
 func _apply_safe_area() -> void:
-	UIThemeBuilder.apply_device_safe_area(safe_margin, 36, 36, 36, 52)
+	# Top-right Settings button sits away from the top-left camera cutout while staying
+	# high enough to never touch the top of the painted "Topo Smash" logo.
+	var window_size: Vector2i = DisplayServer.window_get_size()
+	var safe_rect: Rect2i = DisplayServer.get_display_safe_area()
+	var vp_size: Vector2 = get_viewport_rect().size
+	if vp_size.x <= 1.0 or vp_size.y <= 1.0:
+		vp_size = Vector2(1080.0, 1920.0)
+	var scale_y: float = vp_size.y / float(maxi(1, window_size.y))
+	var top_inset: int = roundi(float(maxi(0, safe_rect.position.y)) * scale_y)
+	var bottom_raw: int = maxi(0, window_size.y - (safe_rect.position.y + safe_rect.size.y))
+	var bottom_inset: int = roundi(float(bottom_raw) * scale_y)
+
+	safe_margin.add_theme_constant_override("margin_top", maxi(20, top_inset + 8))
+	safe_margin.add_theme_constant_override("margin_bottom", maxi(56, bottom_inset + 40))
+	safe_margin.add_theme_constant_override("margin_left", 36)
+	safe_margin.add_theme_constant_override("margin_right", 36)
 
 
 func _apply_procedural_theme() -> void:
-	top_title_badge.add_theme_stylebox_override(
-		"panel",
-		UIThemeBuilder.make_panel_style(
-			Color(0.11, 0.07, 0.04, 0.90),
-			Color("#FFB800"),
-			30,
-			5,
-			28
-		)
+	# 1. Carved-Timber & Molten-Amber Subtitle Plaque right under the painted "Topo Smash" logo
+	var plaque_sb := StyleBoxFlat.new()
+	plaque_sb.bg_color = Color(0.17, 0.08, 0.03, 0.92)
+	plaque_sb.border_color = Color("#FF8C1A")
+	plaque_sb.border_width_left = 4
+	plaque_sb.border_width_top = 4
+	plaque_sb.border_width_right = 4
+	plaque_sb.border_width_bottom = 8
+	plaque_sb.set_corner_radius_all(26)
+	plaque_sb.shadow_color = Color(0.08, 0.03, 0.01, 0.65)
+	plaque_sb.shadow_size = 14
+	plaque_sb.shadow_offset = Vector2(0, 6)
+	plaque_sb.content_margin_left = 38
+	plaque_sb.content_margin_right = 38
+	plaque_sb.content_margin_top = 10
+	plaque_sb.content_margin_bottom = 12
+	subtitle_plaque.add_theme_stylebox_override("panel", plaque_sb)
+
+	sub_logo_label.label_settings = UIThemeBuilder.make_label_settings(
+		46,
+		Color("#FFE566"),
+		12,
+		Color("#1E0C04"),
+		Vector2(0, 5)
 	)
+
+	# 2. Settings Modal Panel
 	settings_modal.add_theme_stylebox_override(
 		"panel",
 		UIThemeBuilder.make_panel_style(
-			Color(0.12, 0.08, 0.05, 0.98),
-			Color("#FFB800"),
+			Color(0.13, 0.08, 0.04, 0.98),
+			Color("#FF8C1A"),
 			30,
 			5,
 			32
 		)
-	)
-
-	main_logo_label.label_settings = UIThemeBuilder.make_label_settings(
-		92,
-		Color("#FFE047"),
-		16,
-		Color("#1C0E04"),
-		Vector2(0, 8)
-	)
-	sub_logo_label.label_settings = UIThemeBuilder.make_label_settings(
-		46,
-		Color("#FF7A2F"),
-		10,
-		Color("#1C0E04"),
-		Vector2(0, 5)
-	)
-	tagline_label.label_settings = UIThemeBuilder.make_label_settings(
-		30,
-		Color("#FFF5D6"),
-		7,
-		Color("#160C05"),
-		Vector2(0, 3)
-	)
-	hint_label.label_settings = UIThemeBuilder.make_label_settings(
-		28,
-		Color("#FFF3C4"),
-		7
 	)
 
 	settings_title_lbl.label_settings = UIThemeBuilder.make_label_settings(46, Color("#FFE047"), 10)
@@ -114,24 +122,20 @@ func _apply_procedural_theme() -> void:
 	music_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#58D68D"), 7)
 	sfx_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#5DADE2"), 7)
 
-	UIThemeBuilder.apply_arcade_button_style(
+	# 3. Top-right Mine-Timber Settings Button (larger & higher up)
+	UIThemeBuilder.apply_village_button_style(
 		open_settings_btn,
-		Color("#34495E"),
-		Color("#1F2E3D"),
-		Color("#FFFDF5"),
-		32,
-		22,
-		8
+		Color("#4A2812"),
+		Color("#231005"),
+		Color("#FFE89E"),
+		36,
+		24,
+		10
 	)
-	UIThemeBuilder.apply_arcade_button_style(
-		start_button,
-		Color("#FFB800"),
-		Color("#B86B00"),
-		Color("#FFFDF5"),
-		50,
-		30,
-		12
-	)
+
+	# 4. Handcrafted Molten-Amber & Carved-Timber 3D Start Button ("¡JUGAR!")
+	_apply_hero_start_button_style(start_button)
+
 	UIThemeBuilder.apply_arcade_button_style(
 		close_settings_btn,
 		Color("#E74C3C"),
@@ -145,6 +149,55 @@ func _apply_procedural_theme() -> void:
 	UIThemeBuilder.style_option_button(lang_option, 34)
 	UIThemeBuilder.style_slider(music_slider)
 	UIThemeBuilder.style_slider(sfx_slider)
+
+
+func _apply_hero_start_button_style(btn: Button) -> void:
+	btn.add_theme_font_override("font", UIThemeBuilder.get_ui_font())
+	btn.add_theme_font_size_override("font_size", 56)
+	btn.add_theme_color_override("font_color", Color("#FFFDF2"))
+	btn.add_theme_color_override("font_hover_color", Color("#FFFFFF"))
+	btn.add_theme_color_override("font_pressed_color", Color("#FFE8A3"))
+	btn.add_theme_color_override("font_focus_color", Color("#FFFDF2"))
+	btn.add_theme_color_override("font_outline_color", Color("#210D04"))
+	btn.add_theme_constant_override("outline_size", 14)
+
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = Color("#F97316")
+	normal.border_color = Color("#3B1908")
+	normal.border_width_left = 6
+	normal.border_width_top = 6
+	normal.border_width_right = 6
+	normal.border_width_bottom = 16
+	normal.set_corner_radius_all(38)
+	normal.shadow_color = Color(0.09, 0.04, 0.01, 0.72)
+	normal.shadow_size = 18
+	normal.shadow_offset = Vector2(0, 8)
+	normal.content_margin_left = 36
+	normal.content_margin_right = 36
+	normal.content_margin_top = 14
+	normal.content_margin_bottom = 20
+
+	var hover: StyleBoxFlat = normal.duplicate()
+	hover.bg_color = Color("#FB923C")
+	hover.border_color = Color("#4A210B")
+
+	var pressed: StyleBoxFlat = normal.duplicate()
+	pressed.bg_color = Color("#EA580C")
+	pressed.border_width_bottom = 6
+	pressed.content_margin_top = 24
+	pressed.content_margin_bottom = 10
+
+	var focus: StyleBoxFlat = hover.duplicate()
+	focus.border_color = Color("#FFE066")
+	focus.border_width_left = 6
+	focus.border_width_top = 6
+	focus.border_width_right = 6
+	focus.border_width_bottom = 16
+
+	btn.add_theme_stylebox_override("normal", normal)
+	btn.add_theme_stylebox_override("hover", hover)
+	btn.add_theme_stylebox_override("pressed", pressed)
+	btn.add_theme_stylebox_override("focus", focus)
 
 
 func _populate_language_selector() -> void:
@@ -197,11 +250,8 @@ func _refresh_audio_toggle_buttons() -> void:
 
 func _refresh_localized_texts() -> void:
 	open_settings_btn.text = LocalizationManager.t("BTN_HUB_SETTINGS") + " / 🌐"
-	main_logo_label.text = LocalizationManager.t("GAME_TITLE_MAIN")
 	sub_logo_label.text = LocalizationManager.t("GAME_TITLE_SUB")
-	tagline_label.text = LocalizationManager.t("TITLE_TAGLINE")
 	start_button.text = LocalizationManager.t("BTN_TAP_TO_START")
-	hint_label.text = LocalizationManager.t("HINT_CONTROLS")
 
 	settings_title_lbl.text = LocalizationManager.t("SETTINGS_TITLE")
 	lang_title_lbl.text = "🌐 " + LocalizationManager.t("LBL_LANGUAGE") + ":"
@@ -211,15 +261,13 @@ func _refresh_localized_texts() -> void:
 	_refresh_audio_toggle_buttons()
 
 
-func _start_ambient_animations() -> void:
-	hero_art.pivot_offset = hero_art.size * 0.5
-	var bg_tween: Tween = create_tween().set_loops()
-	bg_tween.tween_property(hero_art, "scale", Vector2(1.04, 1.04), 4.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	bg_tween.tween_property(hero_art, "scale", Vector2(1.0, 1.0), 4.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-
+func _start_button_pulse() -> void:
+	start_button.pivot_offset = Vector2(340.0, 78.0)
 	var btn_tween: Tween = create_tween().set_loops()
-	btn_tween.tween_property(start_button, "modulate", Color(1.08, 1.06, 0.96, 1.0), 0.9).set_trans(Tween.TRANS_SINE)
-	btn_tween.tween_property(start_button, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.9).set_trans(Tween.TRANS_SINE)
+	btn_tween.tween_property(start_button, "scale", Vector2(1.035, 1.035), 0.95).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	btn_tween.parallel().tween_property(start_button, "modulate", Color(1.08, 1.05, 0.96, 1.0), 0.95).set_trans(Tween.TRANS_SINE)
+	btn_tween.tween_property(start_button, "scale", Vector2(1.0, 1.0), 0.95).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	btn_tween.parallel().tween_property(start_button, "modulate", Color(1.0, 1.0, 1.0, 1.0), 0.95).set_trans(Tween.TRANS_SINE)
 
 
 func _on_open_settings_pressed() -> void:

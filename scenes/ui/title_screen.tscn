@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://scripts/ui/title_screen.gd" id="1_title_script"]
 
 [sub_resource type="Gradient" id="Gradient_vignette"]
-offsets = PackedFloat32Array(0, 0.28, 0.65, 1)
-colors = PackedColorArray(0.06, 0.04, 0.02, 0.85, 0.06, 0.04, 0.02, 0.08, 0.06, 0.04, 0.02, 0.25, 0.05, 0.03, 0.01, 0.92)
+offsets = PackedFloat32Array(0, 0.72, 0.85, 1)
+colors = PackedColorArray(0, 0, 0, 0, 0, 0, 0, 0, 0.08, 0.04, 0.01, 0.38, 0.06, 0.03, 0.01, 0.82)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_vignette"]
 gradient = SubResource("Gradient_vignette")
@@ -50,22 +50,6 @@ mouse_filter = 2
 texture = SubResource("GradientTexture2D_vignette")
 expand_mode = 1
 
-[node name="AmbientMotes" type="CPUParticles2D" parent="."]
-position = Vector2(540, 1750)
-amount = 32
-lifetime = 6.0
-preprocess = 2.0
-emission_shape = 3
-emission_rect_extents = Vector2(540, 200)
-direction = Vector2(0, -1)
-spread = 25.0
-gravity = Vector2(0, -18)
-initial_velocity_min = 35.0
-initial_velocity_max = 75.0
-scale_amount_min = 5.0
-scale_amount_max = 10.0
-color = Color(1, 0.91, 0.52, 0.5)
-
 [node name="SafeMargin" type="MarginContainer" parent="."]
 layout_mode = 1
 anchors_preset = 15
@@ -74,9 +58,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 36
-theme_override_constants/margin_top = 36
+theme_override_constants/margin_top = 18
 theme_override_constants/margin_right = 36
-theme_override_constants/margin_bottom = 52
+theme_override_constants/margin_bottom = 56
 
 [node name="CenterWrap" type="HBoxContainer" parent="SafeMargin"]
 layout_mode = 2
@@ -87,59 +71,51 @@ custom_minimum_size = Vector2(920, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 26
+theme_override_constants/separation = 16
 
 [node name="TopBar" type="HBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn"]
 layout_mode = 2
 alignment = 2
 
 [node name="OpenSettingsButton" type="Button" parent="SafeMargin/CenterWrap/CenterColumn/TopBar"]
-custom_minimum_size = Vector2(340, 86)
+custom_minimum_size = Vector2(360, 96)
 layout_mode = 2
 text = "⚙️ AJUSTES / 🌐"
 
-[node name="TopTitleBadge" type="PanelContainer" parent="SafeMargin/CenterWrap/CenterColumn"]
+[node name="LogoClearanceSpacer" type="Control" parent="SafeMargin/CenterWrap/CenterColumn"]
+custom_minimum_size = Vector2(0, 520)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="SubtitleCenterRow" type="HBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn"]
+layout_mode = 2
+alignment = 1
+
+[node name="SubtitlePlaque" type="PanelContainer" parent="SafeMargin/CenterWrap/CenterColumn/SubtitleCenterRow"]
 layout_mode = 2
 
-[node name="TitleVBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn/TopTitleBadge"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="MainLogoLabel" type="Label" parent="SafeMargin/CenterWrap/CenterColumn/TopTitleBadge/TitleVBox"]
-layout_mode = 2
-text = "TOPO SMASH"
-horizontal_alignment = 1
-
-[node name="SubLogoLabel" type="Label" parent="SafeMargin/CenterWrap/CenterColumn/TopTitleBadge/TitleVBox"]
+[node name="SubLogoLabel" type="Label" parent="SafeMargin/CenterWrap/CenterColumn/SubtitleCenterRow/SubtitlePlaque"]
 layout_mode = 2
 text = "CAOS CON CASCO"
 horizontal_alignment = 1
 
-[node name="TaglineLabel" type="Label" parent="SafeMargin/CenterWrap/CenterColumn/TopTitleBadge/TitleVBox"]
-layout_mode = 2
-text = "¡Defiende tu jardín en 2.5D de la invasión subterránea!"
-horizontal_alignment = 1
-autowrap_mode = 2
-
-[node name="Spacer" type="Control" parent="SafeMargin/CenterWrap/CenterColumn"]
+[node name="HeroMoleSpacer" type="Control" parent="SafeMargin/CenterWrap/CenterColumn"]
 layout_mode = 2
 size_flags_vertical = 3
 mouse_filter = 2
 
 [node name="BottomActionBox" type="VBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn"]
 layout_mode = 2
-theme_override_constants/separation = 18
+theme_override_constants/separation = 16
 
-[node name="TapToStartButton" type="Button" parent="SafeMargin/CenterWrap/CenterColumn/BottomActionBox"]
-custom_minimum_size = Vector2(0, 160)
+[node name="StartButtonRow" type="HBoxContainer" parent="SafeMargin/CenterWrap/CenterColumn/BottomActionBox"]
 layout_mode = 2
-text = "🔨 ¡PRESIONA PARA INICIAR!"
+alignment = 1
 
-[node name="PlatformHintLabel" type="Label" parent="SafeMargin/CenterWrap/CenterColumn/BottomActionBox"]
+[node name="TapToStartButton" type="Button" parent="SafeMargin/CenterWrap/CenterColumn/BottomActionBox/StartButtonRow"]
+custom_minimum_size = Vector2(680, 156)
 layout_mode = 2
-text = "Toca la pantalla • Haz clic • Presiona [Enter] o Botón (A)"
-horizontal_alignment = 1
-autowrap_mode = 2
+text = "¡JUGAR!"
 
 [node name="SettingsBackdrop" type="ColorRect" parent="."]
 visible = false
