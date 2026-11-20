@@ -4,6 +4,7 @@ extends Control
 ## giant 160px tall Start button, and a big-text Settings Modal (Language, Music, SFX).
 
 const MAIN_HUB_SCENE_PATH: String = "res://scenes/ui/main_hub.tscn"
+const HERO_ART_PATH: String = "res://assets/art/topo_hero.jpg"
 
 @onready var safe_margin: MarginContainer = $SafeMargin
 @onready var hero_art: TextureRect = $BackgroundHolder/HeroArt
@@ -30,6 +31,8 @@ const MAIN_HUB_SCENE_PATH: String = "res://scenes/ui/main_hub.tscn"
 
 
 func _ready() -> void:
+	if ResourceLoader.exists(HERO_ART_PATH):
+		hero_art.texture = ResourceLoader.load(HERO_ART_PATH) as Texture2D
 	_apply_safe_area()
 	get_viewport().size_changed.connect(_apply_safe_area)
 	_apply_procedural_theme()

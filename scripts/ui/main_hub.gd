@@ -7,7 +7,9 @@ extends Control
 const TITLE_SCENE_PATH: String = "res://scenes/ui/title_screen.tscn"
 const STORE_SCENE_PATH: String = "res://scenes/ui/store_screen.tscn"
 const ARENA_SCENE_PATH: String = "res://scenes/game/arena_2_5d.tscn"
+const VILLAGE_BG_PATH: String = "res://assets/art/village_hub_bg.jpg"
 
+@onready var village_hero_art: TextureRect = $VillageHeroArt
 @onready var safe_margin: MarginContainer = $SafeMargin
 @onready var top_bar_panel: PanelContainer = $SafeMargin/CenterWrap/MainColumn/TopStatusBar
 @onready var back_title_btn: Button = $SafeMargin/CenterWrap/MainColumn/TopStatusBar/TopHBox/BackToTitleBtn
@@ -43,6 +45,8 @@ const ARENA_SCENE_PATH: String = "res://scenes/game/arena_2_5d.tscn"
 
 
 func _ready() -> void:
+	if ResourceLoader.exists(VILLAGE_BG_PATH):
+		village_hero_art.texture = ResourceLoader.load(VILLAGE_BG_PATH) as Texture2D
 	_apply_safe_area()
 	get_viewport().size_changed.connect(_apply_safe_area)
 	_apply_styles()

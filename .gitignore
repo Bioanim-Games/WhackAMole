@@ -1,3 +1,10 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Proprietary Art & Custom App Icons (Local only - never push to GitHub)
+/assets/art/
+/icon.webp
+/icon.webp.import
+/_gen_icons_tmp.gd
+/_gen_icons_tmp.gd.uid

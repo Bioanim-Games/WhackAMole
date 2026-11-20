@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/title_screen.gd" id="1_title_script"]
-[ext_resource type="Texture2D" path="res://assets/art/topo_hero.jpg" id="2_hero_tex"]
 
 [sub_resource type="Gradient" id="Gradient_vignette"]
 offsets = PackedFloat32Array(0, 0.28, 0.65, 1)
@@ -37,7 +36,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-texture = ExtResource("2_hero_tex")
 expand_mode = 1
 stretch_mode = 6
 
