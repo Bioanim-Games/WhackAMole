@@ -229,6 +229,91 @@ static func apply_village_button_style(
 	btn.add_theme_stylebox_override("focus", focus)
 
 
+## Floating 3D Comic-Letters Button (No rectangle background — pure bold golden/amber
+## letters with thick dark-red/espresso outline matched to start_button.jpg reference)
+static func apply_floating_letter_button_style(
+	btn: Button,
+	font_size: int = 86,
+	face_color: Color = Color("#FFE600"),
+	outline_color: Color = Color("#6E1D04"),
+	outline_size: int = 22
+) -> void:
+	var font := SystemFont.new()
+	font.font_names = get_ui_font().font_names
+	font.font_weight = 900
+	btn.add_theme_font_override("font", font)
+	btn.add_theme_font_size_override("font_size", font_size)
+	btn.add_theme_color_override("font_color", face_color)
+	btn.add_theme_color_override("font_hover_color", Color("#FFF36B"))
+	btn.add_theme_color_override("font_pressed_color", Color("#FFB800"))
+	btn.add_theme_color_override("font_focus_color", Color("#FFF36B"))
+	btn.add_theme_color_override("font_outline_color", outline_color)
+	btn.add_theme_constant_override("outline_size", outline_size)
+
+	var empty_sb := StyleBoxEmpty.new()
+	btn.add_theme_stylebox_override("normal", empty_sb)
+	btn.add_theme_stylebox_override("hover", empty_sb)
+	btn.add_theme_stylebox_override("pressed", empty_sb)
+	btn.add_theme_stylebox_override("focus", empty_sb)
+	btn.add_theme_stylebox_override("disabled", empty_sb)
+
+
+## Hand-carved Rustic Wooden Signboard + 3D Golden Letters Button matched to start_button.jpg
+static func apply_wood_sign_button_style(
+	btn: Button,
+	font_size: int = 72,
+	face_color: Color = Color("#FFE600"),
+	text_outline_color: Color = Color("#7A2005"),
+	text_outline_size: int = 18,
+	wood_fill: Color = Color("#5A341B"),
+	wood_dark_rim: Color = Color("#241105")
+) -> void:
+	var font := SystemFont.new()
+	font.font_names = get_ui_font().font_names
+	font.font_weight = 900
+	btn.add_theme_font_override("font", font)
+	btn.add_theme_font_size_override("font_size", font_size)
+	btn.add_theme_color_override("font_color", face_color)
+	btn.add_theme_color_override("font_hover_color", Color("#FFF475"))
+	btn.add_theme_color_override("font_pressed_color", Color("#FFC400"))
+	btn.add_theme_color_override("font_focus_color", Color("#FFF475"))
+	btn.add_theme_color_override("font_outline_color", text_outline_color)
+	btn.add_theme_constant_override("outline_size", text_outline_size)
+
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = wood_fill
+	normal.border_color = wood_dark_rim
+	normal.border_width_left = 7
+	normal.border_width_top = 7
+	normal.border_width_right = 7
+	normal.border_width_bottom = 16
+	normal.set_corner_radius_all(22)
+	normal.shadow_color = Color(0.06, 0.02, 0.0, 0.72)
+	normal.shadow_size = 16
+	normal.shadow_offset = Vector2(0, 8)
+	normal.content_margin_left = 28
+	normal.content_margin_right = 28
+	normal.content_margin_top = 12
+	normal.content_margin_bottom = 18
+
+	var hover: StyleBoxFlat = normal.duplicate()
+	hover.bg_color = wood_fill.lightened(0.08)
+
+	var pressed: StyleBoxFlat = normal.duplicate()
+	pressed.bg_color = wood_fill.darkened(0.08)
+	pressed.border_width_bottom = 7
+	pressed.content_margin_top = 20
+	pressed.content_margin_bottom = 10
+
+	var focus: StyleBoxFlat = hover.duplicate()
+	focus.border_color = Color("#3A1B08")
+
+	btn.add_theme_stylebox_override("normal", normal)
+	btn.add_theme_stylebox_override("hover", hover)
+	btn.add_theme_stylebox_override("pressed", pressed)
+	btn.add_theme_stylebox_override("focus", focus)
+
+
 ## Styles an OptionButton AND its PopupMenu so dropdown items are big (32px+) and easy to read.
 static func style_option_button(opt: OptionButton, font_size: int = 32) -> void:
 	opt.add_theme_font_override("font", get_ui_font())

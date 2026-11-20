@@ -58,9 +58,9 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 36
-theme_override_constants/margin_top = 18
+theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 36
-theme_override_constants/margin_bottom = 56
+theme_override_constants/margin_bottom = 64
 
 [node name="CenterWrap" type="HBoxContainer" parent="SafeMargin"]
 layout_mode = 2
@@ -78,12 +78,12 @@ layout_mode = 2
 alignment = 2
 
 [node name="OpenSettingsButton" type="Button" parent="SafeMargin/CenterWrap/CenterColumn/TopBar"]
-custom_minimum_size = Vector2(360, 96)
+custom_minimum_size = Vector2(360, 86)
 layout_mode = 2
 text = "⚙️ AJUSTES / 🌐"
 
 [node name="LogoClearanceSpacer" type="Control" parent="SafeMargin/CenterWrap/CenterColumn"]
-custom_minimum_size = Vector2(0, 520)
+custom_minimum_size = Vector2(0, 650)
 layout_mode = 2
 mouse_filter = 2
 

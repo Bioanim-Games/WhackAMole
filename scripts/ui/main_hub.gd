@@ -113,12 +113,12 @@ func _apply_styles() -> void:
 	music_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#58D68D"), 7)
 	sfx_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#5DADE2"), 7)
 
-	# Rustic Village Timber & Tavern-Sign button styling (SPEC-M2.1-03)
-	UIThemeBuilder.apply_village_button_style(back_title_btn, Color("#7A4924"), Color("#3E210C"), Color("#FFF5D6"), 30, 20, 8)
-	UIThemeBuilder.apply_village_button_style(play_btn, Color("#F59E0B"), Color("#7C2D12"), Color("#FFFDF5"), 48, 28, 13)
-	UIThemeBuilder.apply_village_button_style(store_btn, Color("#D9531E"), Color("#6E2007"), Color("#FFF7E6"), 42, 26, 11)
-	UIThemeBuilder.apply_village_button_style(profile_btn, Color("#8C5227"), Color("#43230C"), Color("#FCE7B2"), 31, 24, 10)
-	UIThemeBuilder.apply_village_button_style(settings_btn, Color("#6E4223"), Color("#361D0A"), Color("#FCE7B2"), 31, 24, 10)
+	# Floating 3D Golden/Amber Comic Letters without rectangle boxes (matched to start_button.jpg)
+	UIThemeBuilder.apply_floating_letter_button_style(back_title_btn, 36, Color("#FFE600"), Color("#5E1904"), 14)
+	UIThemeBuilder.apply_floating_letter_button_style(play_btn, 76, Color("#FFE600"), Color("#7A1F04"), 22)
+	UIThemeBuilder.apply_floating_letter_button_style(store_btn, 58, Color("#FFCC00"), Color("#6E1B04"), 18)
+	UIThemeBuilder.apply_floating_letter_button_style(profile_btn, 42, Color("#FFE666"), Color("#5E1904"), 15)
+	UIThemeBuilder.apply_floating_letter_button_style(settings_btn, 42, Color("#FFE666"), Color("#5E1904"), 15)
 
 	UIThemeBuilder.apply_arcade_button_style(info_reward_btn, Color("#27AE60"), Color("#196F3D"), Color.WHITE, 34, 22, 9)
 	UIThemeBuilder.apply_arcade_button_style(info_close_btn, Color("#E74C3C"), Color("#922B21"), Color.WHITE, 36, 22, 9)

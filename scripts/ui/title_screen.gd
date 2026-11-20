@@ -60,50 +60,38 @@ func _ready() -> void:
 
 
 func _apply_safe_area() -> void:
-	# Top-right Settings button sits away from the top-left camera cutout while staying
-	# high enough to never touch the top of the painted "Topo Smash" logo.
+	# Top-right Settings button sits at the very top-right sky well above the painted "Topo Smash" logo.
 	var window_size: Vector2i = DisplayServer.window_get_size()
 	var safe_rect: Rect2i = DisplayServer.get_display_safe_area()
 	var vp_size: Vector2 = get_viewport_rect().size
 	if vp_size.x <= 1.0 or vp_size.y <= 1.0:
 		vp_size = Vector2(1080.0, 1920.0)
 	var scale_y: float = vp_size.y / float(maxi(1, window_size.y))
-	var top_inset: int = roundi(float(maxi(0, safe_rect.position.y)) * scale_y)
 	var bottom_raw: int = maxi(0, window_size.y - (safe_rect.position.y + safe_rect.size.y))
 	var bottom_inset: int = roundi(float(bottom_raw) * scale_y)
 
-	safe_margin.add_theme_constant_override("margin_top", maxi(20, top_inset + 8))
-	safe_margin.add_theme_constant_override("margin_bottom", maxi(56, bottom_inset + 40))
+	safe_margin.add_theme_constant_override("margin_top", 10)
+	safe_margin.add_theme_constant_override("margin_bottom", maxi(64, bottom_inset + 44))
 	safe_margin.add_theme_constant_override("margin_left", 36)
 	safe_margin.add_theme_constant_override("margin_right", 36)
 
 
 func _apply_procedural_theme() -> void:
-	# 1. Carved-Timber & Molten-Amber Subtitle Plaque right under the painted "Topo Smash" logo
-	var plaque_sb := StyleBoxFlat.new()
-	plaque_sb.bg_color = Color(0.17, 0.08, 0.03, 0.92)
-	plaque_sb.border_color = Color("#FF8C1A")
-	plaque_sb.border_width_left = 4
-	plaque_sb.border_width_top = 4
-	plaque_sb.border_width_right = 4
-	plaque_sb.border_width_bottom = 8
-	plaque_sb.set_corner_radius_all(26)
-	plaque_sb.shadow_color = Color(0.08, 0.03, 0.01, 0.65)
-	plaque_sb.shadow_size = 14
-	plaque_sb.shadow_offset = Vector2(0, 6)
-	plaque_sb.content_margin_left = 38
-	plaque_sb.content_margin_right = 38
-	plaque_sb.content_margin_top = 10
-	plaque_sb.content_margin_bottom = 12
-	subtitle_plaque.add_theme_stylebox_override("panel", plaque_sb)
-
-	sub_logo_label.label_settings = UIThemeBuilder.make_label_settings(
-		46,
-		Color("#FFE566"),
-		12,
-		Color("#1E0C04"),
-		Vector2(0, 5)
-	)
+	# 1. Floating 3D Clear-Rock Letters for Subtitle ("CAOS CON CASCO") right below the painted "Topo Smash" logo
+	subtitle_plaque.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	var rock_ls := LabelSettings.new()
+	var rock_font := SystemFont.new()
+	rock_font.font_names = UIThemeBuilder.get_ui_font().font_names
+	rock_font.font_weight = 900
+	rock_ls.font = rock_font
+	rock_ls.font_size = 50
+	rock_ls.font_color = Color("#E6E1DA")
+	rock_ls.outline_size = 16
+	rock_ls.outline_color = Color("#2C2623")
+	rock_ls.shadow_size = 10
+	rock_ls.shadow_color = Color(0.08, 0.07, 0.06, 0.85)
+	rock_ls.shadow_offset = Vector2(0, 7)
+	sub_logo_label.label_settings = rock_ls
 
 	# 2. Settings Modal Panel
 	settings_modal.add_theme_stylebox_override(
@@ -122,19 +110,23 @@ func _apply_procedural_theme() -> void:
 	music_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#58D68D"), 7)
 	sfx_label.label_settings = UIThemeBuilder.make_label_settings(34, Color("#5DADE2"), 7)
 
-	# 3. Top-right Mine-Timber Settings Button (larger & higher up)
-	UIThemeBuilder.apply_village_button_style(
+	# 3. Top-right Floating 3D Letters Settings Button (higher up, no rectangle)
+	UIThemeBuilder.apply_floating_letter_button_style(
 		open_settings_btn,
-		Color("#4A2812"),
-		Color("#231005"),
-		Color("#FFE89E"),
-		36,
-		24,
-		10
+		38,
+		Color("#FFE600"),
+		Color("#5E1904"),
+		14
 	)
 
-	# 4. Handcrafted Molten-Amber & Carved-Timber 3D Start Button ("¡JUGAR!")
-	_apply_hero_start_button_style(start_button)
+	# 4. Giant 3D Golden Floating Letters Start Button ("¡JUGAR!" matched to start_button.jpg)
+	UIThemeBuilder.apply_floating_letter_button_style(
+		start_button,
+		98,
+		Color("#FFE600"),
+		Color("#7A1F04"),
+		24
+	)
 
 	UIThemeBuilder.apply_arcade_button_style(
 		close_settings_btn,
