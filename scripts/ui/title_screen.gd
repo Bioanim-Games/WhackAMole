@@ -11,6 +11,7 @@ const FALLBACK_HERO_ART_PATH: String = "res://assets/art/topo_hero.jpg"
 
 @onready var safe_margin: MarginContainer = $SafeMargin
 @onready var hero_art: TextureRect = $BackgroundHolder/HeroArt
+@onready var logo_clearance_spacer: Control = $SafeMargin/CenterWrap/CenterColumn/LogoClearanceSpacer
 @onready var open_settings_btn: Button = $SafeMargin/CenterWrap/CenterColumn/TopBar/OpenSettingsButton
 @onready var subtitle_plaque: PanelContainer = $SafeMargin/CenterWrap/CenterColumn/SubtitleCenterRow/SubtitlePlaque
 @onready var sub_logo_label: Label = $SafeMargin/CenterWrap/CenterColumn/SubtitleCenterRow/SubtitlePlaque/SubLogoLabel
@@ -60,7 +61,11 @@ func _ready() -> void:
 
 
 func _apply_safe_area() -> void:
-	# Top-right Settings button sits at the very top-right sky well above the painted "Topo Smash" logo.
+	# HeroArt uses STRETCH_KEEP_ASPECT_COVERED with Title screen wide.jpg (4:3 wide master artwork):
+	# On both Pixel 5 (9:16 portrait) and Pixel 10 Fold (unfolded ~1:1), the full vertical height
+	# is always fitted and centered, cropping only the extra left/right pine trees equally!
+	hero_art.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+
 	var window_size: Vector2i = DisplayServer.window_get_size()
 	var safe_rect: Rect2i = DisplayServer.get_display_safe_area()
 	var vp_size: Vector2 = get_viewport_rect().size
@@ -69,6 +74,10 @@ func _apply_safe_area() -> void:
 	var scale_y: float = vp_size.y / float(maxi(1, window_size.y))
 	var bottom_raw: int = maxi(0, window_size.y - (safe_rect.position.y + safe_rect.size.y))
 	var bottom_inset: int = roundi(float(bottom_raw) * scale_y)
+
+	# Keep the subtitle locked right below the centered "Topo Smash" logo at any viewport height
+	var height_ratio: float = vp_size.y / 1920.0
+	logo_clearance_spacer.custom_minimum_size = Vector2(0.0, roundf(650.0 * height_ratio))
 
 	safe_margin.add_theme_constant_override("margin_top", 10)
 	safe_margin.add_theme_constant_override("margin_bottom", maxi(64, bottom_inset + 44))
